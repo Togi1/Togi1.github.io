@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tolgahan Ay — Game Developer & Systems Designer</title>
+<meta name="description" content="C# ve Unity odaklı mekanik geliştirme, distopik simülasyon sistemleri ve veri odaklı oyun mimarileri.">
+
+<!-- Fontlar: Chakra Petch (başlık, teknik/ cyberpunk), IBM Plex Sans (gövde) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+
+<!-- Tailwind (CDN) + Lucide (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  // Obsidyen palet: katman farkı renkle değil, ton ile verilir
+  tailwind.config = { theme: { extend: {
+    colors: { obs:{950:'#07080b',900:'#0d0f14',800:'#141720',700:'#1e222d'}, ink:'#dde3ec', mute:'#8a93a3',
+              plague:'#ff3b6b', scan:'#4fd8ff' },
+    fontFamily: { display:['"Chakra Petch"','sans-serif'], sans:['"IBM Plex Sans"','sans-serif'], mono:['"IBM Plex Mono"','monospace'] }
+  }}};
+</script>
+
+<style>
+  html{scroll-behavior:smooth}
+  body{background:#07080b;color:#dde3ec}
+  /* İnce gürültü/scanline dokusu: yalnızca hero arka planında */
+  .scanlines{background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 4px)}
+  :focus-visible{outline:2px solid #4fd8ff;outline-offset:3px}
+  /* Video kartı: yüklenemezse yer tutucu görünür */
+  .vid-wrap video{width:100%;height:100%;object-fit:cover}
+  .vid-wrap .fallback{display:none}
+  .vid-wrap.missing .fallback{display:flex}
+  /* <dialog> stilleri */
+  dialog{background:transparent;border:0;padding:0;max-width:100vw;max-height:100vh;color:inherit}
+  dialog::backdrop{background:rgba(4,5,8,.88);backdrop-filter:blur(6px)}
+  dialog[open]{animation:pop .22s ease-out}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+  /* Tek orkestre edilen hero hareketi: dosya tarama çizgisi */
+  .scan-line{position:absolute;left:0;right:0;height:2px;background:#4fd8ff;box-shadow:0 0 18px #4fd8ff;animation:scan 4.5s linear infinite}
+  @keyframes scan{0%{top:0;opacity:0}8%{opacity:.9}92%{opacity:.9}100%{top:100%;opacity:0}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+  /* Kod renklendirme */
+  .tk-k{color:#ff7ab2}.tk-t{color:#4fd8ff}.tk-s{color:#ffd479}.tk-c{color:#6c7686;font-style:italic}.tk-n{color:#b9a6ff}.tk-a{color:#7fe3b0}
+</style>
+</head>
+
+<body class="font-sans antialiased">
+
+<!-- ================= NAV ================= -->
+<header class="fixed top-0 inset-x-0 z-40 bg-obs-950/80 backdrop-blur border-b border-obs-700">
+  <nav class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+    <a href="#top" class="font-display font-semibold tracking-wide">T. Ay</a>
+    <ul class="hidden sm:flex gap-6 text-sm text-mute">
+      <li><a class="hover:text-ink" href="#skills">Yetkinlikler</a></li>
+      <li><a class="hover:text-ink" href="#spotlight">Latent Paralysis</a></li>
+      <li><a class="hover:text-ink" href="#shipped">Tamamlanan</a></li>
+      <li><a class="hover:text-ink" href="#cv">Özgeçmiş</a></li>
+      <li><a class="hover:text-ink" href="#contact">İletişim</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+<!-- ================= 1. HERO ================= -->
+<section class="relative pt-32 pb-20 overflow-hidden">
+  <div class="scanlines absolute inset-0 pointer-events-none"></div>
+  <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-[1.25fr_1fr] gap-12 items-center relative">
+    <div>
+      <p class="font-mono text-sm text-scan mb-4">Unity · C# · Sistem Tasarımı</p>
+      <h1 class="font-display font-bold text-5xl sm:text-6xl leading-[1.02] tracking-tight">Tolgahan Ay</h1>
+      <p class="font-display text-xl sm:text-2xl text-mute mt-2">Game Developer &amp; Systems Designer</p>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink/90">
+        C# ve Unity odaklı mekanik geliştirme, distopik simülasyon sistemleri ve veri odaklı oyun mimarileri.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#spotlight" class="px-5 py-3 bg-plague text-obs-950 font-display font-semibold rounded-sm hover:brightness-110">Öne Çıkan Projeyi İncele</a>
+        <a href="#shipped" class="px-5 py-3 border border-scan text-scan font-display font-semibold rounded-sm hover:bg-scan/10">Tamamlanan Projeler</a>
+                <a href="assets/Tolgahan-Ay-CV.pdf" download class="px-5 py-3 border border-obs-700 text-ink font-display font-semibold rounded-sm hover:border-mute inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>CV İndir</a>
+      </div>
+      <div class="mt-6 flex gap-4 text-mute">
+        <a href="https://github.com/Togi1" target="_blank" rel="noopener" aria-label="GitHub" class="hover:text-ink"><i data-lucide="github"></i></a>
+        <a href="mailto:tolgahan.ay@outlook.com" aria-label="E-posta" class="hover:text-ink"><i data-lucide="mail"></i></a>
+      </div>
+    </div>
+
+    <!-- Hero'nun akılda kalan anı: oynanabilir mini "dosya" paneli (oyunun core loop'unun küçük bir tadı) -->
+    <aside class="relative bg-obs-900 border border-obs-700 rounded-sm p-5 overflow-hidden" aria-label="Latent Paralysis mini demo">
+      <div class="scan-line"></div>
+      <div class="flex justify-between font-mono text-xs text-mute mb-4"><span>SAF GEN PROGRAMI</span><span id="d-id">DOSYA #0417</span></div>
+      <dl class="grid grid-cols-2 gap-y-2 text-sm">
+        <dt class="text-mute">Başvuran</dt><dd id="d-name">M. Kaya, 34</dd>
+        <dt class="text-mute">Kan testi</dt><dd id="d-blood" class="text-scan">Negatif</dd>
+        <dt class="text-mute">İdrar testi</dt><dd id="d-urine" class="text-plague">Kahverengi, kanlı</dd>
+        <dt class="text-mute">Nabız</dt><dd id="d-pulse">Düzensiz</dd>
+        <dt class="text-mute">Test hakkı</dt><dd id="d-quota">2 / 3</dd>
+      </dl>
+      <p id="d-note" class="mt-4 text-sm text-mute border-t border-obs-700 pt-3">Genelge 12: “Kanda iz yoksa kabul edilir.” Tek test yeterli mi?</p>
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <button data-act="ok" class="py-2 border border-scan text-scan font-display hover:bg-scan/10">Onayla</button>
+        <button data-act="no" class="py-2 border border-plague text-plague font-display hover:bg-plague/10">Reddet</button>
+      </div>
+      <p id="d-result" class="mt-3 text-xs font-mono text-mute min-h-[1rem]" aria-live="polite"></p>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= 2. YETKİNLİKLER ================= -->
+<section id="skills" class="py-20 border-t border-obs-700">
+  <div class="max-w-6xl mx-auto px-5">
+    <h2 class="font-display text-3xl font-bold">Yetkinlikler</h2>
+    <p class="text-mute mt-2 max-w-xl">Aşağıdakilerin tamamı ya yayınlanmış kodumda ya da geliştirdiğim tasarım belgesinde karşılık buluyor.</p>
+    <div class="mt-10 grid md:grid-cols-3 gap-px bg-obs-700 border border-obs-700">
+      <div class="bg-obs-900 p-6">
+        <i data-lucide="terminal" class="text-scan mb-3"></i>
+        <h3 class="font-display text-lg font-semibold">Diller &amp; Motorlar</h3>
+        <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
+          <li>C# (temel/orta seviye; Microsoft C# Foundational sertifikalı)</li>
+          <li>Python (veri yapıları, OOP, algoritma)</li>
+          <li>Unity 2D &amp; 3D: Rigidbody, trigger, coroutine, UI</li>
+          <li>Unreal Engine (giriş), Blender (başlangıç), Git / GitHub</li>
+        </ul>
+      </div>
+      <div class="bg-obs-900 p-6">
+        <i data-lucide="boxes" class="text-scan mb-3"></i>
+        <h3 class="font-display text-lg font-semibold">Sistem Mimarisi &amp; Kodlama Desenleri</h3>
+        <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
+          <li>ScriptableObject ile veri odaklı tasarım (FishData)</li>
+          <li>Ağırlıklı rastgele seçim ve dinamik fiyat hesabı</li>
+          <li>State yönetimi: UI paneli, mini oyun, duraklatma</li>
+          <li>Save sistemleri (PlayerPrefs)</li>
+          <li>Event-driven mimari: Latent Paralysis olay sistemi için planlı</li>
+        </ul>
+      </div>
+      <div class="bg-obs-900 p-6">
+        <i data-lucide="drama" class="text-plague mb-3"></i>
+        <h3 class="font-display text-lg font-semibold">Oyun &amp; Mekanik Tasarımı</h3>
+        <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
+          <li>Core loop tasarımı</li>
+          <li>Ahlaki ikilem sistemleri</li>
+          <li>Bütçe / kaynak yönetimi mekaniği</li>
+          <li>Oyun dengeleme (hız, zorluk, ekonomi eğrileri)</li>
+          <li>Anlatı tasarımı ve çoklu son kurgusu</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. SPOTLIGHT: LATENT PARALYSIS ================= -->
+<section id="spotlight" class="py-20 border-t border-obs-700 bg-obs-900">
+  <div class="max-w-6xl mx-auto px-5">
+    <span class="inline-flex items-center gap-2 px-3 py-1 border border-plague text-plague text-sm font-display">
+      <span class="w-2 h-2 rounded-full bg-plague"></span>In Development — Release: 4 Months
+    </span>
+    <h2 class="font-display text-4xl sm:text-5xl font-bold mt-5">Latent Paralysis</h2>
+    <p class="text-mute mt-1 font-mono text-sm">PO535-V · Pure Gene Protocol</p>
+    <p class="mt-4 max-w-2xl text-lg">Distopik tıbbi sınır kontrol ve inceleme simülasyonu. Papers, Please mantığı, Metro atmosferi. Bir salgın sonrası gen laboratuvarında doktorsun; kural kitabına güvenip güvenmemek sana kalmış.</p>
+
+    <div class="mt-10 grid lg:grid-cols-[1.4fr_1fr] gap-8">
+      <!-- Teaser videosu: assets/latent-paralysis-teaser.mp4 -->
+      <figure>
+        <div class="vid-wrap relative aspect-video bg-obs-950 border border-obs-700 group" data-title="Latent Paralysis — Teaser">
+          <video muted loop playsinline preload="none" data-src="assets/latent-paralysis-teaser.mp4" aria-label="Latent Paralysis teaser"></video>
+          <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/latent-paralysis-teaser.mp4 bekleniyor</div>
+          <button class="open-video absolute inset-0 flex items-end justify-end p-3" aria-label="Teaser'ı tam ekran aç">
+            <span class="inline-flex items-center gap-2 bg-obs-950/80 border border-obs-700 px-3 py-1.5 text-sm"><i data-lucide="maximize" class="w-4 h-4"></i>Tam ekran</span>
+          </button>
+        </div>
+        <figcaption class="text-xs text-mute mt-2">Geliştirme günlüğü ve atmosfer teaser'ı</figcaption>
+      </figure>
+
+      <div class="space-y-5">
+        <div>
+          <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4 text-plague"></i>Yanıltıcı genelge ve sınırlı bütçe</h3>
+          <p class="text-sm text-ink/85 mt-1">Yolsuzluk yüzünden kişi başına test sayısı kısıtlı. Devlet, istemediği grupları elemek için sahte belirtiler yayınlıyor. Kaynak kıtlığıyla sahte kural arasındaki gerilim temel baskı.</p>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="microscope" class="w-4 h-4 text-scan"></i>Tıbbi veri analizi</h3>
+          <p class="text-sm text-ink/85 mt-1">Belirtileri çaprazla; kanda çıkmayan hastalık idrarda çıkabilir, yanlış pozitifler var. İlaç yan etkileri sonuçları bozuyor, tek test kesin teşhis vermiyor.</p>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="tv" class="w-4 h-4 text-scan"></i>Arıza eventleri ve gün sonu anlatısı</h3>
+          <p class="text-sm text-ink/85 mt-1">Cihazlar bozulur, sistem kesilir, kural kitabı bir süre görünmez. Gün sonunda hastalarla konuşulur, ertesi sabah kararlarının sonucu televizyon haberlerinde karşına çıkar.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs font-mono text-mute pt-1">
+          <span class="border border-obs-700 px-2 py-1">Unity</span><span class="border border-obs-700 px-2 py-1">C#</span><span class="border border-obs-700 px-2 py-1">Veri odaklı kural motoru</span>
+        </div>
+        <button id="open-gdd" class="mt-2 px-5 py-3 bg-plague text-obs-950 font-display font-semibold hover:brightness-110 inline-flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>GDD &amp; Sistem Tasarımını Oku</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. TAMAMLANMIŞ PROJE ================= -->
+<section id="shipped" class="py-20 border-t border-obs-700">
+  <div class="max-w-6xl mx-auto px-5">
+    <h2 class="font-display text-3xl font-bold">Tamamlanan Projeler</h2>
+
+    <article class="mt-10 grid lg:grid-cols-2 gap-10">
+      <!-- Oynanış videosu: assets/gameplay.mp4 -->
+      <div class="vid-wrap relative aspect-video bg-obs-900 border border-obs-700" data-title="Pixel Angler — Oynanış">
+        <video muted loop playsinline preload="none" data-src="assets/gameplay.mp4" aria-label="Pixel Angler oynanış"></video>
+        <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/gameplay.mp4 bekleniyor</div>
+        <button class="open-video absolute inset-0" aria-label="Oynanış videosunu büyüt"></button>
+      </div>
+
+      <div>
+        <h3 class="font-display text-2xl font-semibold">Pixel Angler</h3>
+        <p class="text-mute text-sm mt-1">2D balık tutma ve ekonomi oyunu · Unity</p>
+        <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
+          <dt class="text-mute">Motor</dt><dd>Unity 2D, C#</dd>
+          <dt class="text-mute">Sistemler</dt><dd>Olta atma, ısırma bekleme, yakalama mini oyunu, envanter, dükkan</dd>
+          <dt class="text-mute">Teknikler</dt><dd>ScriptableObject, Coroutine, Rigidbody2D, TextMeshPro, PlayerPrefs</dd>
+        </dl>
+
+        <h4 class="font-display font-semibold mt-6">Case study: veri odaklı balık havuzu</h4>
+        <p class="text-sm text-ink/85 mt-2 leading-relaxed">
+          Her balık, kodun değil editörün sahip olduğu bir <code class="font-mono text-scan">FishData</code> ScriptableObject'i. Ağırlık, zorluk, taban fiyat ve çıkma ihtimali tek yerde duruyor; yeni balık eklemek script yazmak yerine asset oluşturmak demek.
+          Şamandıra balık vurduğunda <code class="font-mono text-scan">spawnChance</code> değerleriyle ağırlıklı rastgele seçim yapılıyor: toplam ağırlık içinde rastgele bir sayı çekilip kümülatif toplamla karşılaştırılıyor. Sazan 100, efsanevi balık 5 gibi değerlerle nadirlik tasarlanabiliyor.
+        </p>
+        <p class="text-sm text-ink/85 mt-3 leading-relaxed">
+          Aynı veri mini oyunu da besliyor: balığın <code class="font-mono text-scan">catchDifficulty</code> değeri hareket hızını çarpıyor ve satış fiyatı <code class="font-mono text-scan">GetDynamicPrice()</code> ile aynı zorluktan türüyor. Zorluk, ödül ve nadirlik tek bir veri kaynağından dengeleniyor. Dükkandaki yükseltmeler her alımda üstel maliyet artışıyla (×1.5) ilerliyor.
+        </p>
+        <p class="text-sm text-mute mt-3 leading-relaxed">
+          Bir sonraki iterasyonda planım: <code class="font-mono">FindFirstObjectByType</code> çağrılarını event'lere taşımak ve çanta için tek bir envanter listesi kullanmak.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button class="open-code px-5 py-3 border border-scan text-scan font-display font-semibold hover:bg-scan/10 inline-flex items-center gap-2" data-src="code-src" data-title="FishData.cs + Bobber.cs (ağırlıklı seçim)"><i data-lucide="code-2" class="w-4 h-4"></i>Kaynak Kodu İncele</button>
+          <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display hover:border-mute inline-flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i>GitHub</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== Proje 2: 3D Dart ===== -->
+    <article class="mt-16 pt-16 border-t border-obs-700 grid lg:grid-cols-2 gap-10">
+      <!-- Oynanış videosu: assets/dart-gameplay.mp4 -->
+      <div class="vid-wrap relative aspect-video bg-obs-900 border border-obs-700" data-title="3D Dart — Oynanış">
+        <video muted loop playsinline preload="none" data-src="assets/dart-gameplay.mp4" aria-label="3D Dart oynanış"></video>
+        <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/dart-gameplay.mp4 bekleniyor</div>
+        <button class="open-video absolute inset-0" aria-label="Dart oynanış videosunu büyüt"></button>
+      </div>
+      <div>
+        <h3 class="font-display text-2xl font-semibold">3D Dart</h3>
+        <p class="text-mute text-sm mt-1">Fizik tabanlı 3D dart oyunu · Unity</p>
+        <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
+          <dt class="text-mute">Motor</dt><dd>Unity 3D, C#</dd>
+          <dt class="text-mute">Sistemler</dt><dd>Kaydırarak fırlatma, fizik tabanlı uçuş, sekme/saplanma, puan bölgeleri, takip kamerası, menü</dd>
+          <dt class="text-mute">Teknikler</dt><dd>Rigidbody, ForceMode.Impulse, Collision, tag kontrolü, AudioSource, prefab efektleri</dd>
+        </dl>
+        <h4 class="font-display font-semibold mt-6">Case study: kaydırma hareketini fiziğe çevirmek</h4>
+        <p class="text-sm text-ink/85 mt-2 leading-relaxed">
+          Oyuncu fareyi basılı tutup bırakıyor; <code class="font-mono text-scan">DartFirlatma</code> basma ve bırakma noktaları arasındaki farkı alıp <code class="font-mono text-scan">firlatmaGucu</code> ile ölçekliyor, sabit bir ileri kuvvetle birleştirip tek bir impuls olarak uyguluyor. Kaydırmanın yönü ve uzunluğu atışın yönünü ve gücünü belirliyor.
+          Uçuşta dart'ın ucu her kare hız vektörüne dönüyor, böylece hareket inandırıcı görünüyor.
+        </p>
+        <p class="text-sm text-ink/85 mt-3 leading-relaxed">
+          Çarpışmada atışın sonucu hem fiziğe hem şansa bağlı: dart hızlı düşüyorsa ya da <code class="font-mono text-scan">sekmeSansi</code> zarı tutarsa sekiyor, aksi halde tahtaya saplanıp vurulan bölgenin puanını ekliyor. Tüm değerler inspector'dan ayarlanabiliyor, yani oyun hissi kod değiştirmeden dengeleniyor.
+        </p>
+        <p class="text-sm text-mute mt-3 leading-relaxed">
+          Bir sonraki iterasyonda planım: string tabanlı <code class="font-mono">Invoke</code> çağrılarını coroutine'e, <code class="font-mono">FindFirstObjectByType</code> çağrılarını event'e çevirmek.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button class="open-code px-5 py-3 border border-scan text-scan font-display font-semibold hover:bg-scan/10 inline-flex items-center gap-2" data-src="code-src-dart" data-title="DartFirlatma.cs (fırlatma ve çarpışma)"><i data-lucide="code-2" class="w-4 h-4"></i>Kaynak Kodu İncele</button>
+          <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display hover:border-mute inline-flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i>GitHub</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= ÖZGEÇMİŞ (CV) ================= -->
+<section id="cv" class="py-20 border-t border-obs-700">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 class="font-display text-3xl font-bold">Özgeçmiş</h2>
+        <p class="text-mute mt-2">Dijital Oyun Tasarımı Öğrencisi &amp; Yazılım Geliştirici Adayı · Muğla / Bodrum</p>
+      </div>
+      <a href="assets/Tolgahan-Ay-CV.pdf" download class="px-5 py-3 bg-scan text-obs-950 font-display font-semibold inline-flex items-center gap-2 hover:brightness-110"><i data-lucide="download" class="w-4 h-4"></i>CV'yi PDF indir</a>
+    </div>
+
+    <div class="mt-10 grid lg:grid-cols-[1.2fr_1fr] gap-10">
+      <div class="space-y-10">
+        <div>
+          <h3 class="font-display font-semibold text-lg">Hakkımda</h3>
+          <p class="mt-2 text-ink/85 leading-relaxed max-w-prose">Oyun geliştirme teknolojileri ve yazılım alanında problem çözme odaklı projelere ilgi duyuyorum. Lise döneminde teknik merakımı okul birinciliği ve iki tescilli patent çalışmasıyla somutlaştırdım. 7 yıllık lisanslı badminton geçmişimin kazandırdığı odaklanma, disiplin ve takım ruhunu yazılım süreçlerine taşımayı hedefliyorum.</p>
+        </div>
+
+        <div>
+          <h3 class="font-display font-semibold text-lg">Eğitim</h3>
+          <ol class="mt-3 border-l border-obs-700 ml-1 space-y-5">
+            <li class="pl-5 relative"><span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-scan"></span>
+              <p class="font-medium">Muğla Sıtkı Koçman Üniversitesi, Dijital Oyun Tasarımı</p><p class="text-sm text-mute">2025 – devam ediyor</p></li>
+            <li class="pl-5 relative"><span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-obs-700"></span>
+              <p class="font-medium">Lise</p><p class="text-sm text-mute">Okul birincisi olarak mezun</p></li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 class="font-display font-semibold text-lg">Ar-Ge ve patentler</h3>
+          <div class="mt-3 grid sm:grid-cols-2 gap-px bg-obs-700 border border-obs-700 text-sm">
+            <div class="bg-obs-900 p-4"><p class="font-medium">Çizgi İzleyen Robot</p><p class="text-mute mt-1">Robotik kodlama ve donanım entegrasyonu</p><p class="font-mono text-xs text-scan mt-2">TR2022017364U5</p></div>
+            <div class="bg-obs-900 p-4"><p class="font-medium">USB / Mini SD / SD Kart Girişli Kalemlik</p><p class="text-mute mt-1">Ürün geliştirme ve inovatif tasarım</p><p class="font-mono text-xs text-scan mt-2">TR2022018474A2</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-10">
+        <div>
+          <h3 class="font-display font-semibold text-lg">Teknik seviyeler</h3>
+          <ul class="mt-3 divide-y divide-obs-700 text-sm border-y border-obs-700">
+            <li class="flex justify-between py-2"><span>Robotik kodlama</span><span class="text-mute">Gelişmiş</span></li>
+            <li class="flex justify-between py-2"><span>C#</span><span class="text-mute">Temel / Orta</span></li>
+            <li class="flex justify-between py-2"><span>Python (veri yapıları, OOP, algoritma)</span><span class="text-mute">Temel / Orta</span></li>
+            <li class="flex justify-between py-2"><span>Unity &amp; Unreal Engine</span><span class="text-mute">Giriş</span></li>
+            <li class="flex justify-between py-2"><span>Blender animasyon</span><span class="text-mute">Başlangıç</span></li>
+            <li class="flex justify-between py-2"><span>İngilizce</span><span class="text-mute">B1</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-lg">Sertifikalar</h3>
+          <ul class="mt-3 space-y-1.5 text-sm text-ink/85">
+            <li>C# Foundational (Microsoft)</li>
+            <li>DiscoverEU Participant / Cultural Mobility Experience (European Commission)</li>
+            <li>Robotik Kodlama Uzmanlık</li>
+            <li>Temel Robotik Kodlama</li>
+            <li>Bilgisayar İşletmenliği</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-lg">İlgi alanları</h3>
+          <p class="mt-2 text-sm text-ink/85">Lisanslı badminton (7 yıl), teknoloji projeleri ve Ar-Ge, oyun mekanikleri inceleme ve tersine mühendislik.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. İLETİŞİM ================= -->
+<section id="contact" class="py-20 border-t border-obs-700 bg-obs-900">
+  <div class="max-w-3xl mx-auto px-5">
+    <div class="border border-obs-700 bg-obs-800 p-8">
+      <h2 class="font-display text-3xl font-bold">Birlikte bir şey yapalım</h2>
+      <p class="text-mute mt-2">Muğla / Bodrum. Staj, junior pozisyon ve oyun projesi tekliflerine açığım. Kısa bir mesaj yeterli.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+                <a href="mailto:tolgahan.ay@outlook.com?subject=Portfolyo%20Hakk%C4%B1nda" class="px-5 py-3 bg-scan text-obs-950 font-display font-semibold inline-flex items-center gap-2 hover:brightness-110"><i data-lucide="mail" class="w-4 h-4"></i>E-posta gönder</a>
+        <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="github" class="w-4 h-4"></i>github.com/Togi1</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="py-8 text-center text-xs text-mute border-t border-obs-700">© <span id="year"></span> Tolgahan Ay. Unity ve C# ile geliştirildi.</footer>
+
+<!-- ================= MODALLAR ================= -->
+
+<!-- Video Lightbox -->
+<dialog id="video-modal" aria-label="Video oynatıcı">
+  <div class="w-[min(94vw,1100px)]">
+    <div class="flex justify-between items-center mb-2"><span id="vm-title" class="font-display"></span>
+      <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+    <video id="vm-video" class="w-full max-h-[80vh] bg-black" controls loop playsinline></video>
+  </div>
+</dialog>
+
+<!-- GDD Modalı -->
+<dialog id="gdd-modal" aria-label="Latent Paralysis tasarım analizi">
+  <div class="w-[min(94vw,880px)] max-h-[90vh] overflow-y-auto bg-obs-900 border border-obs-700 p-6 sm:p-8">
+    <div class="flex justify-between items-start gap-4">
+      <div><h3 class="font-display text-2xl font-bold">Latent Paralysis: Tasarım Analizi</h3>
+        <p class="text-mute text-sm mt-1">Hastalık: PO535-V (Paralysis Occulta), halk arasında “gizli felç”.</p></div>
+      <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <h4 class="font-display font-semibold mt-6">Core Loop (bir oyun günü)</h4>
+    <ol class="mt-3 grid sm:grid-cols-2 gap-2 text-sm" id="loop-list"></ol>
+
+    <h4 class="font-display font-semibold mt-8">Ahlaki çatışma sistemi</h4>
+    <div class="mt-3 grid sm:grid-cols-2 gap-px bg-obs-700 border border-obs-700 text-sm">
+      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Devlet yönergesi</b>
+        <p class="mt-1 text-ink/85">Azınlıklar, muhalifler ve yoksullar asılsız “belirtilerle” elenmek isteniyor. Hasta bir zengini içeri almak da genelge olarak gelebilir.</p></div>
+      <div class="bg-obs-800 p-4"><b class="font-display text-scan">Vicdani karar</b>
+        <p class="mt-1 text-ink/85">İpuçları diyaloglarda ve sabah haberlerinde. Genleri değerli bir topluluk, sadece sevilmediği için hasta ilan edilebilir.</p></div>
+    </div>
+    <p class="text-sm text-ink/85 mt-3">Mekanik sınır: kişi başına test sayısı kısıtlı. Tek test kesin sonuç vermediği için oyuncu hangi testi, kime harcayacağına karar vermek zorunda.</p>
+
+    <h4 class="font-display font-semibold mt-8">Alternatif sonlar</h4>
+    <div class="mt-3 grid sm:grid-cols-3 gap-3 text-sm">
+      <div class="border border-scan/50 p-4"><b class="font-display text-scan">Tedavi (iyi son)</b><p class="mt-1 text-ink/85">İki yol: kurallara uyup gerçekler gizli kalır, ya da uymayıp muhalefet hükümeti düşürür ve gerçekler açığa çıkar.</p></div>
+      <div class="border border-plague/50 p-4"><b class="font-display text-plague">Salgın (kötü son)</b><p class="mt-1 text-ink/85">Çok fazla hasta içeri alınır. Araştırma durur, virüs dünyaya yayılır.</p></div>
+      <div class="border border-plague/50 p-4"><b class="font-display text-plague">İsyan (alternatif kötü son)</b><p class="mt-1 text-ink/85">Çok fazla masum reddedilir. Halk merkeze saldırır, hükümet çöker.</p></div>
+    </div>
+
+    <h4 class="font-display font-semibold mt-8">Planlanan sistemler</h4>
+    <ul class="mt-2 text-sm text-ink/85 list-disc pl-5 space-y-1">
+      <li>İlaç yan etkileri ile belirtilerin çaprazlanması</li>
+      <li>Kan grubuna özel günlük değişen yargılar</li>
+      <li>Hasta temas geçmişi bilgisi</li>
+      <li>Rastgele sistem kesintileri, bozulan test cihazları</li>
+      <li>Hafıza kaybı ve beyin küçülmesi gibi belirtilerin “saçma cümle” diyaloglarıyla belirsizleştirilmesi</li>
+    </ul>
+  </div>
+</dialog>
+
+<!-- Kod Modalı -->
+<dialog id="code-modal" aria-label="Kaynak kod">
+  <div class="w-[min(94vw,900px)] max-h-[90vh] flex flex-col bg-obs-900 border border-obs-700">
+    <div class="flex justify-between items-center p-4 border-b border-obs-700">
+      <span id="code-title" class="font-mono text-sm text-mute"></span>
+      <div class="flex gap-2">
+        <button id="copy-code" class="px-3 py-1 border border-obs-700 hover:border-mute text-sm">Kopyala</button>
+        <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+    <pre class="overflow-auto p-5 text-[13px] leading-relaxed font-mono"><code id="code-out"></code></pre>
+  </div>
+</dialog>
+
+<!-- Kod kaynağı: repodaki gerçek kodun sadeleştirilmiş hali (yorumlar eklendi) -->
+<script type="text/plain" id="code-src">
+// ---- FishData.cs: balık, kodun değil editörün sahip olduğu veri ----
+[CreateAssetMenu(fileName = "YeniBalik", menuName = "PixelAngler/Balik Verisi")]
+public class FishData : ScriptableObject
+{
+    public string fishName = "Yeni Balık";
+    public Sprite fishIcon;
+    public int weight = 1;
+
+    [Header("Ekonomi ve Zorluk")]
+    public int baseGoldValue = 10;
+    [Range(1f, 10f)] public float catchDifficulty = 1f;   // 1 kolay, 10 zor
+    public int spawnChance = 100;                          // Sazan 100, efsanevi 5
+
+    // Satış fiyatı zorluktan türer: tek veri kaynağı
+    public int GetDynamicPrice()
+    {
+        return Mathf.RoundToInt(baseGoldValue * catchDifficulty);
+    }
+}
+
+// ---- Bobber.cs: ağırlıklı rastgele seçim ----
+FishData PickFish(List<FishData> fishPool)
+{
+    int totalWeight = 0;
+    foreach (var f in fishPool)
+        totalWeight += f.spawnChance;
+
+    int randomValue = Random.Range(0, totalWeight);
+    int currentWeight = 0;
+
+    foreach (var f in fishPool)
+    {
+        currentWeight += f.spawnChance;           // kümülatif aralık
+        if (randomValue < currentWeight)
+            return f;
+    }
+    return fishPool[0];                            // güvenli varsayılan
+}
+
+// ---- FishingMiniGame.cs: zorluk hareket hızını çarpar ----
+fishSpeed = 200f * fish.catchDifficulty;
+fishPosition = Mathf.MoveTowards(fishPosition, fishDestination, fishSpeed * Time.deltaTime);
+</script>
+
+<script type="text/plain" id="code-src-dart">
+// ---- DartFirlatma.cs: kaydırma hareketini fizik impulsuna çevirir ----
+void Update()
+{
+    if (islemTamamlandi || firlatildiMi) return;
+
+    if (Input.GetMouseButtonDown(0))
+        baslangicNoktasi = Input.mousePosition;
+    else if (Input.GetMouseButtonUp(0))
+    {
+        bitisNoktasi = Input.mousePosition;
+        Firlat();
+    }
+}
+
+void Firlat()
+{
+    firlatildiMi = true;
+    rb.isKinematic = false;
+
+    // Kaydırma yönü ve uzunluğu atışın yönünü ve gücünü belirler
+    Vector2 kaydirmaYonu = bitisNoktasi - baslangicNoktasi;
+    Vector3 firlatmaVektoru = new Vector3(
+        kaydirmaYonu.x * firlatmaGucu,
+        kaydirmaYonu.y * firlatmaGucu,
+        ileriGuc);                                   // sabit ileri kuvvet
+
+    rb.AddForce(firlatmaVektoru, ForceMode.Impulse);
+    kameraScripti.TakibeBasla(this.transform);
+}
+
+// Uçuşta dart'ın ucu hız yönüne döner
+if (firlatildiMi && !islemTamamlandi && rb.linearVelocity.magnitude > 0.1f)
+    transform.rotation = Quaternion.LookRotation(rb.linearVelocity) * Quaternion.Euler(90, 0, 0);
+
+void OnCollisionEnter(Collision temas)
+{
+    if (islemTamamlandi) return;
+
+    if (temas.gameObject.CompareTag("Tahta"))
+    {
+        islemTamamlandi = true;
+        bool asagiDusuyor = rb.linearVelocity.y < dususHiziLimiti;
+        int zar = Random.Range(0, 100);
+
+        if (asagiDusuyor || zar < sekmeSansi)
+        {
+            // Sekme: geriye ve aşağıya küçük bir itki
+            rb.AddForce(Vector3.back * 2f + Vector3.down * 2f, ForceMode.Impulse);
+        }
+        else
+        {
+            // Saplanma: dart durur, bölgenin puanı eklenir
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            PuanBolgesi bolge = temas.gameObject.GetComponent<PuanBolgesi>();
+            if (bolge != null) PuanEkle(bolge.puan);
+        }
+    }
+}
+</script>
+
+<script>
+/* ============ Yardımcılar ============ */
+lucide.createIcons();
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============ Lazy-load video: görünür olunca src ver, ekrandan çıkınca durdur ============ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) {
+      if (!v.src && v.dataset.src) v.src = v.dataset.src;
+      v.play().catch(() => {});
+    } else v.pause();
+  });
+}, { rootMargin: '200px', threshold: .15 });
+document.querySelectorAll('.vid-wrap video').forEach(v => {
+  v.addEventListener('error', () => v.closest('.vid-wrap').classList.add('missing'));
+  io.observe(v);
+});
+
+/* ============ Modal yönetimi (<dialog>: Esc ve odak tuzağı yerleşik) ============ */
+const modals = document.querySelectorAll('dialog');
+modals.forEach(d => {
+  // Boş alana (backdrop) tıklayınca kapat
+  d.addEventListener('mousedown', e => { if (e.target === d) d.close(); });
+  d.querySelectorAll('.close').forEach(b => b.addEventListener('click', () => d.close()));
+});
+
+/* Video lightbox */
+const vm = document.getElementById('video-modal'), vmv = document.getElementById('vm-video');
+document.querySelectorAll('.open-video').forEach(btn => btn.addEventListener('click', () => {
+  const wrap = btn.closest('.vid-wrap'), src = wrap.querySelector('video').dataset.src;
+  document.getElementById('vm-title').textContent = wrap.dataset.title;
+  vmv.src = src; vm.showModal(); vmv.play().catch(() => {});
+}));
+vm.addEventListener('close', () => { vmv.pause(); vmv.removeAttribute('src'); vmv.load(); });
+
+/* GDD modalı: core loop adımları GDD'deki sırayla */
+const loop = [
+  'Sağlıklı olduğunu iddia eden kişiler testlere gelir.',
+  'Dosya incelenir: geçmiş, ırk, cinsiyet, aile.',
+  'Gelen genelgelerdeki testler uygulanır.',
+  'Sonuçlar olması gereken verilerle karşılaştırılır.',
+  'Reddet ya da onayla.',
+  'Gün sonu: kabul edilenlerle konuşulur, hikayeleri dinlenir.',
+  'Ertesi sabah: kararların sonucu televizyonda görünür.',
+  'Yeni kurallar ve yeni testler gelir.'
+];
+document.getElementById('loop-list').innerHTML = loop.map((t, i) =>
+  `<li class="flex gap-3 border border-obs-700 bg-obs-800 p-3"><span class="font-mono text-plague">${i + 1}</span><span>${t}</span></li>`).join('');
+document.getElementById('open-gdd').addEventListener('click', () => document.getElementById('gdd-modal').showModal());
+
+/* Kod modalı + basit C# renklendirici (tek geçişli regex: iç içe değişim sorunu yok) */
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function highlight(src) {
+  const re = /(\/\/.*)|("(?:[^"\\]|\\.)*")|(\[[A-Za-z]+(?:\([^\]]*\))?\])|\b(public|private|class|void|int|float|string|bool|return|foreach|var|in|new|if|else|true|false|null|this|using)\b|\b(FishData|ScriptableObject|Sprite|List|Mathf|Random|Time|Vector2|Vector3|Quaternion|Input|Collision|ForceMode|PuanBolgesi|CreateAssetMenu|Header|Range)\b|\b(\d+f?)\b/g;
+  return esc(src).replace(re, (m, c, s, a, k, t, n) =>
+    c ? `<span class="tk-c">${c}</span>` : s ? `<span class="tk-s">${s}</span>` : a ? `<span class="tk-a">${a}</span>` :
+    k ? `<span class="tk-k">${k}</span>` : t ? `<span class="tk-t">${t}</span>` : `<span class="tk-n">${n}</span>`);
+}
+let codeRaw = '';
+document.querySelectorAll('.open-code').forEach(btn => btn.addEventListener('click', () => {
+  codeRaw = document.getElementById(btn.dataset.src).textContent.trim();
+  document.getElementById('code-out').innerHTML = highlight(codeRaw);
+  document.getElementById('code-title').textContent = btn.dataset.title;
+  document.getElementById('code-modal').showModal();
+}));
+document.getElementById('copy-code').addEventListener('click', e => {
+  navigator.clipboard.writeText(codeRaw).then(() => { e.target.textContent = 'Kopyalandı'; setTimeout(() => e.target.textContent = 'Kopyala', 1500); });
+});
+
+/* ============ Hero mini demo: dosya döngüsü ============ */
+const files = [
+  { id:'#0417', name:'M. Kaya, 34', blood:'Negatif', urine:'Kahverengi, kanlı', pulse:'Düzensiz', note:'Genelge 12: “Kanda iz yoksa kabul edilir.” Tek test yeterli mi?', sick:true },
+  { id:'#0418', name:'A. Demir, 52', blood:'Pozitif', urine:'Normal', pulse:'Normal', note:'Hasta ilaç kullanıyor; yan etki enfeksiyon oranını yükseltmiş olabilir.', sick:false },
+  { id:'#0419', name:'S. Aydın, 27', blood:'Negatif', urine:'Normal', pulse:'Normal', note:'Genelge 13: “Bu mahalleden gelenler şüpheli.” Test sonuçları temiz.', sick:false }
+];
+let fi = 0, quota = 3;
+const $ = id => document.getElementById(id);
+function showFile() {
+  const f = files[fi % files.length]; quota = 3;
+  $('d-id').textContent = 'DOSYA ' + f.id; $('d-name').textContent = f.name; $('d-blood').textContent = f.blood;
+  $('d-urine').textContent = f.urine; $('d-pulse').textContent = f.pulse; $('d-quota').textContent = '2 / 3'; $('d-note').textContent = f.note;
+}
+document.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
+  const f = files[fi % files.length], approve = b.dataset.act === 'ok';
+  $('d-result').textContent = (approve ? 'Onaylandı.' : 'Reddedildi.') + ' Sonuç yarın sabah haberlerde.';
+  fi++; setTimeout(showFile, 900);
+}));
+</script>
+</body>
+</html>
