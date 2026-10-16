@@ -13,7 +13,7 @@
 
 <!-- Tailwind (CDN) + Lucide (CDN) -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://unpkg.com/lucide@0.469.0"></script>
 <script>
   // Obsidyen palet: katman farkı renkle değil, ton ile verilir
   tailwind.config = { theme: { extend: {
@@ -55,7 +55,7 @@
     <a href="#top" class="font-display font-semibold tracking-wide">T. Ay</a>
     <ul class="hidden sm:flex gap-6 text-sm text-mute">
       <li><a class="hover:text-ink" href="#skills">Yetkinlikler</a></li>
-      <li><a class="hover:text-ink" href="#spotlight">Latent Paralysis</a></li>
+      <li><a class="hover:text-ink" href="#spotlight">Project PM535-T</a></li>
       <li><a class="hover:text-ink" href="#shipped">Tamamlanan</a></li>
       <li><a class="hover:text-ink" href="#cv">Özgeçmiş</a></li>
       <li><a class="hover:text-ink" href="#contact">İletişim</a></li>
@@ -83,14 +83,16 @@
       </div>
       <div class="mt-6 flex gap-4 text-mute">
         <a href="https://github.com/Togi1" target="_blank" rel="noopener" aria-label="GitHub" class="hover:text-ink"><i data-lucide="github"></i></a>
+        <a href="https://www.linkedin.com/in/tolgahan-ay-b729a416b/" target="_blank" rel="noopener" aria-label="LinkedIn" class="hover:text-ink"><i data-lucide="linkedin"></i></a>
+        <a href="https://www.instagram.com/togiiay/" target="_blank" rel="noopener" aria-label="Instagram" class="hover:text-ink"><i data-lucide="instagram"></i></a>
         <a href="mailto:tolgahan.ay@outlook.com" aria-label="E-posta" class="hover:text-ink"><i data-lucide="mail"></i></a>
       </div>
     </div>
 
     <!-- Hero'nun akılda kalan anı: oynanabilir mini "dosya" paneli (oyunun core loop'unun küçük bir tadı) -->
-    <aside class="relative bg-obs-900 border border-obs-700 rounded-sm p-5 overflow-hidden" aria-label="Latent Paralysis mini demo">
+    <aside class="relative bg-obs-900 border border-obs-700 rounded-sm p-5 overflow-hidden" aria-label="Project PM535-T mini demo">
       <div class="scan-line"></div>
-      <div class="flex justify-between font-mono text-xs text-mute mb-4"><span>SAF GEN PROGRAMI</span><span id="d-id">DOSYA #0417</span></div>
+      <div class="flex justify-between font-mono text-xs text-mute mb-4"><span>PM535-T · SINIR LABORATUVARI</span><span id="d-id">DOSYA #0417</span></div>
       <dl class="grid grid-cols-2 gap-y-2 text-sm">
         <dt class="text-mute">Başvuran</dt><dd id="d-name">M. Kaya, 34</dd>
         <dt class="text-mute">Kan testi</dt><dd id="d-blood" class="text-scan">Negatif</dd>
@@ -132,7 +134,6 @@
           <li>Ağırlıklı rastgele seçim ve dinamik fiyat hesabı</li>
           <li>State yönetimi: UI paneli, mini oyun, duraklatma</li>
           <li>Save sistemleri (PlayerPrefs)</li>
-          <li>Event-driven mimari: Latent Paralysis olay sistemi için planlı</li>
         </ul>
       </div>
       <div class="bg-obs-900 p-6">
@@ -141,8 +142,10 @@
         <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
           <li>Core loop tasarımı</li>
           <li>Ahlaki ikilem sistemleri</li>
+          <li>Kural sistemi ve test limitleri tasarımı (Project PM535-T)</li>
           <li>Bütçe / kaynak yönetimi mekaniği</li>
           <li>Oyun dengeleme (hız, zorluk, ekonomi eğrileri)</li>
+          <li>2D piksel görsel üretimi (Pixel Angler'ın tüm çizimleri)</li>
           <li>Anlatı tasarımı ve çoklu son kurgusu</li>
         </ul>
       </div>
@@ -156,15 +159,19 @@
     <span class="inline-flex items-center gap-2 px-3 py-1 border border-plague text-plague text-sm font-display">
       <span class="w-2 h-2 rounded-full bg-plague"></span>In Development — Release: 4 Months
     </span>
-    <h2 class="font-display text-4xl sm:text-5xl font-bold mt-5">Latent Paralysis</h2>
-    <p class="text-mute mt-1 font-mono text-sm">PO535-V · Pure Gene Protocol</p>
-    <p class="mt-4 max-w-2xl text-lg">Distopik tıbbi sınır kontrol ve inceleme simülasyonu. Papers, Please mantığı, Metro atmosferi. Bir salgın sonrası gen laboratuvarında doktorsun; kural kitabına güvenip güvenmemek sana kalmış.</p>
+    <h2 class="font-display text-4xl sm:text-5xl font-bold mt-5">Project PM535-T</h2>
+    <p class="text-mute mt-1 font-mono text-sm">Geçici ad · Petrium Studio · Virüs: PO535-V</p>
+    <p class="mt-4 max-w-2xl text-lg">2D point-and-click tıbbi ve dedektiflik simülasyonu. Sınır karantina bölgesindeki laboratuvarda tarama doktorusun: belgeleri, tıbbi geçmişleri ve test sonuçlarını inceleyip kimin araştırma bölgesine gireceğine karar verirsin. Tema: Frontier.</p>
+    <div class="mt-5 flex flex-col gap-1.5 text-sm max-w-3xl">
+      <p><b class="font-display text-plague">Rolüm: Game Designer.</b> Kural sistemi, test limitleri ve çekirdek mekanikler.</p>
+      <p class="text-mute">Ekip: Yavuz Yunusoğlu (yazılım), Oğuz Tok (anlatı), İliser Zehra Çabuk (sanat). Durum: henüz oynanabilir sürüm yok.</p>
+    </div>
 
     <div class="mt-10 grid lg:grid-cols-[1.4fr_1fr] gap-8">
       <!-- Teaser videosu: assets/latent-paralysis-teaser.mp4 -->
       <figure>
-        <div class="vid-wrap relative aspect-video bg-obs-950 border border-obs-700 group" data-title="Latent Paralysis — Teaser">
-          <video muted loop playsinline preload="none" data-src="assets/latent-paralysis-teaser.mp4" aria-label="Latent Paralysis teaser"></video>
+        <div class="vid-wrap relative aspect-video bg-obs-950 border border-obs-700 group" data-title="Project PM535-T — Teaser">
+          <video muted loop playsinline preload="none" data-src="assets/latent-paralysis-teaser.mp4" aria-label="Project PM535-T teaser"></video>
           <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/latent-paralysis-teaser.mp4 bekleniyor</div>
           <button class="open-video absolute inset-0 flex items-end justify-end p-3" aria-label="Teaser'ı tam ekran aç">
             <span class="inline-flex items-center gap-2 bg-obs-950/80 border border-obs-700 px-3 py-1.5 text-sm"><i data-lucide="maximize" class="w-4 h-4"></i>Tam ekran</span>
@@ -180,14 +187,14 @@
         </div>
         <div>
           <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="microscope" class="w-4 h-4 text-scan"></i>Tıbbi veri analizi</h3>
-          <p class="text-sm text-ink/85 mt-1">Belirtileri çaprazla; kanda çıkmayan hastalık idrarda çıkabilir, yanlış pozitifler var. İlaç yan etkileri sonuçları bozuyor, tek test kesin teşhis vermiyor.</p>
+          <p class="text-sm text-ink/85 mt-1">Belirtileri çaprazla; kanda çıkmayan hastalık idrarda çıkabilir, yanlış pozitifler var. İlaç, alkol, madde kullanımı ve panik belirtileri maskeleyebiliyor; tek test kesin teşhis vermiyor.</p>
         </div>
         <div>
           <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="tv" class="w-4 h-4 text-scan"></i>Arıza eventleri ve gün sonu anlatısı</h3>
           <p class="text-sm text-ink/85 mt-1">Cihazlar bozulur, sistem kesilir, kural kitabı bir süre görünmez. Gün sonunda hastalarla konuşulur, ertesi sabah kararlarının sonucu televizyon haberlerinde karşına çıkar.</p>
         </div>
         <div class="flex flex-wrap gap-2 text-xs font-mono text-mute pt-1">
-          <span class="border border-obs-700 px-2 py-1">Unity</span><span class="border border-obs-700 px-2 py-1">C#</span><span class="border border-obs-700 px-2 py-1">Veri odaklı kural motoru</span>
+          <span class="border border-obs-700 px-2 py-1">Unity</span><span class="border border-obs-700 px-2 py-1">2D Point-and-Click</span><span class="border border-obs-700 px-2 py-1">Kural sistemi tasarımı</span>
         </div>
         <button id="open-gdd" class="mt-2 px-5 py-3 bg-plague text-obs-950 font-display font-semibold hover:brightness-110 inline-flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>GDD &amp; Sistem Tasarımını Oku</button>
       </div>
@@ -213,6 +220,8 @@
         <p class="text-mute text-sm mt-1">2D balık tutma ve ekonomi oyunu · Unity</p>
         <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
           <dt class="text-mute">Motor</dt><dd>Unity 2D, C#</dd>
+          <dt class="text-mute">Süreç</dt><dd>Tek başıma, yaklaşık 3 günde geliştirdim</dd>
+          <dt class="text-mute">Görsel</dt><dd>Oyundaki tüm çizimler bana ait</dd>
           <dt class="text-mute">Sistemler</dt><dd>Olta atma, ısırma bekleme, yakalama mini oyunu, envanter, dükkan</dd>
           <dt class="text-mute">Teknikler</dt><dd>ScriptableObject, Coroutine, Rigidbody2D, TextMeshPro, PlayerPrefs</dd>
         </dl>
@@ -248,6 +257,7 @@
         <p class="text-mute text-sm mt-1">Fizik tabanlı 3D dart oyunu · Unity</p>
         <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
           <dt class="text-mute">Motor</dt><dd>Unity 3D, C#</dd>
+          <dt class="text-mute">Süreç</dt><dd>Tek başıma, yaklaşık 3 günde geliştirdim</dd>
           <dt class="text-mute">Sistemler</dt><dd>Kaydırarak fırlatma, fizik tabanlı uçuş, sekme/saplanma, puan bölgeleri, takip kamerası, menü</dd>
           <dt class="text-mute">Teknikler</dt><dd>Rigidbody, ForceMode.Impulse, Collision, tag kontrolü, AudioSource, prefab efektleri</dd>
         </dl>
@@ -348,6 +358,8 @@
       <div class="mt-6 flex flex-wrap gap-3">
                 <a href="mailto:tolgahan.ay@outlook.com?subject=Portfolyo%20Hakk%C4%B1nda" class="px-5 py-3 bg-scan text-obs-950 font-display font-semibold inline-flex items-center gap-2 hover:brightness-110"><i data-lucide="mail" class="w-4 h-4"></i>E-posta gönder</a>
         <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="github" class="w-4 h-4"></i>github.com/Togi1</a>
+        <a href="https://www.linkedin.com/in/tolgahan-ay-b729a416b/" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="linkedin" class="w-4 h-4"></i>LinkedIn</a>
+        <a href="https://www.instagram.com/togiiay/" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="instagram" class="w-4 h-4"></i>Instagram</a>
       </div>
     </div>
   </div>
@@ -368,41 +380,57 @@
 </dialog>
 
 <!-- GDD Modalı -->
-<dialog id="gdd-modal" aria-label="Latent Paralysis tasarım analizi">
-  <div class="w-[min(94vw,880px)] max-h-[90vh] overflow-y-auto bg-obs-900 border border-obs-700 p-6 sm:p-8">
+<dialog id="gdd-modal" aria-label="Project PM535-T tasarım analizi">
+  <div class="w-[min(94vw,920px)] max-h-[90vh] overflow-y-auto bg-obs-900 border border-obs-700 p-6 sm:p-8">
     <div class="flex justify-between items-start gap-4">
-      <div><h3 class="font-display text-2xl font-bold">Latent Paralysis: Tasarım Analizi</h3>
-        <p class="text-mute text-sm mt-1">Hastalık: PO535-V (Paralysis Occulta), halk arasında “gizli felç”.</p></div>
+      <div><h3 class="font-display text-2xl font-bold">Project PM535-T: Tasarım Analizi</h3>
+        <p class="text-mute text-sm mt-1">Game Design Document v0.y.z · Petrium Studio · Yazan: Tolgahan Ay</p></div>
       <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
 
-    <h4 class="font-display font-semibold mt-6">Core Loop (bir oyun günü)</h4>
-    <ol class="mt-3 grid sm:grid-cols-2 gap-2 text-sm" id="loop-list"></ol>
+    <h4 class="font-display font-semibold mt-6">Oyuncu deneyimi</h4>
+    <div class="mt-3 grid sm:grid-cols-3 gap-px bg-obs-700 border border-obs-700 text-sm">
+      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Ahlaki baskı ve suçluluk</b><p class="mt-1 text-ink/85">Keyfi kurallar yüzünden masumları ölüme terk etmek ile kuralı çiğneyip hastalığı tesise sokmak arasındaki ikilem.</p></div>
+      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Şüphe ve paranoya</b><p class="mt-1 text-ink/85">Devlet yönergelerine, başvuranların samimiyetine, hatta kendi test sonuçlarına bile tam güvenememek.</p></div>
+      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Çaresizlik ve sorumluluk</b><p class="mt-1 text-ink/85">Kısıtlı bütçe ve bozulan cihazlarla, eksik bilgiyle hayat-memat kararları vermek.</p></div>
+    </div>
 
-    <h4 class="font-display font-semibold mt-8">Ahlaki çatışma sistemi</h4>
+    <h4 class="font-display font-semibold mt-8">Core loop</h4>
+    <ol class="mt-3 grid sm:grid-cols-2 gap-2 text-sm" id="loop-list"></ol>
+    <p class="text-sm text-ink/85 mt-3">Günün dış döngüsü: akşam kabul edilenlerle konuşma, ertesi sabah kararların televizyon haberlerindeki sonucu, ardından yeni yönergeler. Oyuncu zamanla itaatkâr memur kimliğini bırakıp devletin yönergelerinin yalan olduğunu fark eder ve taraf seçer.</p>
+
+    <h4 class="font-display font-semibold mt-8">Test ve semptom sistemi</h4>
+    <p class="text-sm text-ink/85 mt-2">Klinik belirtiler yapılabilen testlerle birebir eşleşmez. İlaç geçmişi, madde kullanımı ve psikolojik stres belirtileri maskeleyebilir ya da yanlış pozitif üretebilir. Kişi başına yapılabilecek test sayısı sınırlıdır.</p>
+    <div class="mt-3 overflow-x-auto border border-obs-700">
+      <table class="w-full text-sm text-left min-w-[640px]">
+        <thead class="bg-obs-800 text-mute"><tr><th class="p-3 font-medium">Test</th><th class="p-3 font-medium">Ortaya çıkan veri</th><th class="p-3 font-medium">Tetiklenen belirti</th><th class="p-3 font-medium">Tasarım ve yanıltma notu</th></tr></thead>
+        <tbody id="test-rows" class="divide-y divide-obs-700"></tbody>
+      </table>
+    </div>
+
+    <h4 class="font-display font-semibold mt-8">Ahlaki çatışma</h4>
     <div class="mt-3 grid sm:grid-cols-2 gap-px bg-obs-700 border border-obs-700 text-sm">
       <div class="bg-obs-800 p-4"><b class="font-display text-plague">Devlet yönergesi</b>
-        <p class="mt-1 text-ink/85">Azınlıklar, muhalifler ve yoksullar asılsız “belirtilerle” elenmek isteniyor. Hasta bir zengini içeri almak da genelge olarak gelebilir.</p></div>
+        <p class="mt-1 text-ink/85">Çöken otoriter yönetim, bütçe açığını örtmek ve muhalifleri, istenmeyen toplulukları elemek için sahte belirti kuralları dayatıyor.</p></div>
       <div class="bg-obs-800 p-4"><b class="font-display text-scan">Vicdani karar</b>
-        <p class="mt-1 text-ink/85">İpuçları diyaloglarda ve sabah haberlerinde. Genleri değerli bir topluluk, sadece sevilmediği için hasta ilan edilebilir.</p></div>
+        <p class="mt-1 text-ink/85">İpuçları akşam konuşmalarında ve muhalif yayınlarda. Oyuncu yönergelerin sahte olduğunu fark ettikçe kararları da değişir.</p></div>
     </div>
-    <p class="text-sm text-ink/85 mt-3">Mekanik sınır: kişi başına test sayısı kısıtlı. Tek test kesin sonuç vermediği için oyuncu hangi testi, kime harcayacağına karar vermek zorunda.</p>
 
-    <h4 class="font-display font-semibold mt-8">Alternatif sonlar</h4>
+    <h4 class="font-display font-semibold mt-8">Kazanma ve kaybetme</h4>
+    <div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm">
+      <div class="border border-scan/50 p-4"><b class="font-display text-scan">Kazanma</b><p class="mt-1 text-ink/85">Hastaların yarısından fazlasını (en az 7 kişi) içeri almak.</p></div>
+      <div class="border border-plague/50 p-4"><b class="font-display text-plague">Kaybetme</b><p class="mt-1 text-ink/85">Bu sayıya ulaşılmadan 16 kişilik kota dolarsa.</p></div>
+    </div>
+
+    <h4 class="font-display font-semibold mt-8">Olası sonlar</h4>
     <div class="mt-3 grid sm:grid-cols-3 gap-3 text-sm">
-      <div class="border border-scan/50 p-4"><b class="font-display text-scan">Tedavi (iyi son)</b><p class="mt-1 text-ink/85">İki yol: kurallara uyup gerçekler gizli kalır, ya da uymayıp muhalefet hükümeti düşürür ve gerçekler açığa çıkar.</p></div>
-      <div class="border border-plague/50 p-4"><b class="font-display text-plague">Salgın (kötü son)</b><p class="mt-1 text-ink/85">Çok fazla hasta içeri alınır. Araştırma durur, virüs dünyaya yayılır.</p></div>
-      <div class="border border-plague/50 p-4"><b class="font-display text-plague">İsyan (alternatif kötü son)</b><p class="mt-1 text-ink/85">Çok fazla masum reddedilir. Halk merkeze saldırır, hükümet çöker.</p></div>
+      <div class="border border-obs-700 p-4"><b class="font-display">Sadakat</b><p class="mt-1 text-ink/85">Rejime bağlı kalmak.</p></div>
+      <div class="border border-obs-700 p-4"><b class="font-display text-scan">Muhalif devrim</b><p class="mt-1 text-ink/85">Taraf seçip gerçeklerin açığa çıkmasına katkıda bulunmak.</p></div>
+      <div class="border border-obs-700 p-4"><b class="font-display text-plague">İsyan / çöküş</b><p class="mt-1 text-ink/85">Düzenin ve hükümetin dağılması.</p></div>
     </div>
 
-    <h4 class="font-display font-semibold mt-8">Planlanan sistemler</h4>
-    <ul class="mt-2 text-sm text-ink/85 list-disc pl-5 space-y-1">
-      <li>İlaç yan etkileri ile belirtilerin çaprazlanması</li>
-      <li>Kan grubuna özel günlük değişen yargılar</li>
-      <li>Hasta temas geçmişi bilgisi</li>
-      <li>Rastgele sistem kesintileri, bozulan test cihazları</li>
-      <li>Hafıza kaybı ve beyin küçülmesi gibi belirtilerin “saçma cümle” diyaloglarıyla belirsizleştirilmesi</li>
-    </ul>
+    <h4 class="font-display font-semibold mt-8">Görsel ve ses</h4>
+    <p class="text-sm text-ink/85 mt-2">Loş renk paleti, retro-distopik tıbbi cihazlar ve aşınmış belge dokusu. Göz kontrolü gibi arayüz öğeleri, tezgâh başındaymış hissi için fiziksel düğme ve kart olarak tasarlandı. Ses; floresan uğultusu, nabız sesleri, bozulan cihaz uyarıları ve boğuk devlet duyurularından oluşuyor, melodik müzik yok.</p>
   </div>
 </dialog>
 
@@ -568,17 +596,25 @@ vm.addEventListener('close', () => { vmv.pause(); vmv.removeAttribute('src'); vm
 
 /* GDD modalı: core loop adımları GDD'deki sırayla */
 const loop = [
-  'Sağlıklı olduğunu iddia eden kişiler testlere gelir.',
-  'Dosya incelenir: geçmiş, ırk, cinsiyet, aile.',
-  'Gelen genelgelerdeki testler uygulanır.',
-  'Sonuçlar olması gereken verilerle karşılaştırılır.',
-  'Reddet ya da onayla.',
-  'Gün sonu: kabul edilenlerle konuşulur, hikayeleri dinlenir.',
-  'Ertesi sabah: kararların sonucu televizyonda görünür.',
-  'Yeni kurallar ve yeni testler gelir.'
+  'Başvuran laboratuvara girer. Tıbbi geçmişi, etnik kökeni, aile öyküsü, ilaçları ve beyanları incelenir.',
+  'Kısıtlı test seçimi: kaynak sınırı yüzünden her kişiye yalnızca belli sayıda test uygulanabilir.',
+  'Belirti ve yönerge karşılaştırması: sonuçlar her gün değişen yönergelerle çapraz kontrol edilir.',
+  'Karar (onay / ret): devlet baskısı ile vicdan arasında mühürlenir.'
 ];
 document.getElementById('loop-list').innerHTML = loop.map((t, i) =>
   `<li class="flex gap-3 border border-obs-700 bg-obs-800 p-3"><span class="font-mono text-plague">${i + 1}</span><span>${t}</span></li>`).join('');
+
+/* Test–semptom tablosu (GDD'deki sistem tablosu) */
+const tests = [
+  ['Kan testi','Kullanılan ilaçlar, alkol seviyesi','Yüksek nabız, ciltte kızarıklık','Alkol ve antibiyotikler virüs belirtilerini taklit edebilir.'],
+  ['İdrar testi','Madde / uyuşturucu taraması','Yüksek nabız, el titremesi','Bağımlılık geçmişi nörolojik hasardan ayırt edilmeli.'],
+  ['Nabız','Kalp ritmi, anlık nabız','Yüksek nabız','Sınır kapısındaki panik ve korku geçici taşikardiye yol açabilir.'],
+  ['Göz kontrolü','Sklera ve damar incelemesi','Gözde kızarıklık','Uykusuzluk ve toz fırtınası gibi Frontier koşulları kızarıklık yapar.'],
+  ['Cilt kontrolü','Cilt lezyonları, döküntü','Ciltte kızarıklık','Alerjik reaksiyonlar yönergelerde hastalık gibi gösterilebilir.'],
+  ['El kontrolü','Motor refleksler, tremor','Yüksek nabız, el titremesi','PO535-V gizli evrede motor nöronları hedeflediği için kritik.']
+];
+document.getElementById('test-rows').innerHTML = tests.map(r =>
+  `<tr><td class="p-3 font-medium text-scan">${r[0]}</td><td class="p-3 text-ink/85">${r[1]}</td><td class="p-3 text-ink/85">${r[2]}</td><td class="p-3 text-mute">${r[3]}</td></tr>`).join('');
 document.getElementById('open-gdd').addEventListener('click', () => document.getElementById('gdd-modal').showModal());
 
 /* Kod modalı + basit C# renklendirici (tek geçişli regex: iç içe değişim sorunu yok) */
