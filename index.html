@@ -6,12 +6,12 @@
 <title>Tolgahan Ay — Game Developer & Systems Designer</title>
 <meta name="description" content="C# ve Unity odaklı mekanik geliştirme, distopik simülasyon sistemleri ve veri odaklı oyun mimarileri.">
 
-<!-- Fontlar: Chakra Petch (başlık, teknik/ cyberpunk), IBM Plex Sans (gövde) -->
+<!-- Fontlar: Chakra Petch (başlık), IBM Plex Sans (gövde), IBM Plex Mono (teknik etiket) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 
-<!-- Tailwind (CDN) + Lucide (CDN) -->
+<!-- Tailwind (CDN) + Lucide (CDN; marka ikonları için sürüm sabit) -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@0.469.0"></script>
 <script>
@@ -25,26 +25,27 @@
 
 <style>
   html{scroll-behavior:smooth}
+  section[id]{scroll-margin-top:56px}
   body{background:#07080b;color:#dde3ec}
-  /* İnce gürültü/scanline dokusu: yalnızca hero arka planında */
+  /* İnce scanline dokusu: yalnızca hero arka planında */
   .scanlines{background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 4px)}
   :focus-visible{outline:2px solid #4fd8ff;outline-offset:3px}
-  /* Video kartı: yüklenemezse yer tutucu görünür */
-  .vid-wrap video{width:100%;height:100%;object-fit:cover}
-  .vid-wrap .fallback{display:none}
-  .vid-wrap.missing .fallback{display:flex}
-  /* <dialog> stilleri */
+  /* Video bulunamazsa yer tutucu yazı görünür (.vid-box kapsayıcısına .missing eklenir) */
+  .fb{display:none}
+  .missing .fb{display:grid}
+  .missing video{display:none}
+  /* <dialog>: Esc ve odak tuzağı tarayıcıdan gelir */
   dialog{background:transparent;border:0;padding:0;max-width:100vw;max-height:100vh;color:inherit}
   dialog::backdrop{background:rgba(4,5,8,.88);backdrop-filter:blur(6px)}
-  dialog[open]{animation:pop .22s ease-out}
+  dialog[open]{animation:pop .2s ease-out}
   @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-  /* Tek orkestre edilen hero hareketi: dosya tarama çizgisi */
+  /* Hero'nun tek hareketi: dosya tarama çizgisi */
   .scan-line{position:absolute;left:0;right:0;height:2px;background:#4fd8ff;box-shadow:0 0 18px #4fd8ff;animation:scan 4.5s linear infinite}
   @keyframes scan{0%{top:0;opacity:0}8%{opacity:.9}92%{opacity:.9}100%{top:100%;opacity:0}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
   /* Kod renklendirme */
   .tk-k{color:#ff7ab2}.tk-t{color:#4fd8ff}.tk-s{color:#ffd479}.tk-c{color:#6c7686;font-style:italic}.tk-n{color:#b9a6ff}.tk-a{color:#7fe3b0}
-  /* Karşılaştırma kaydırıcısı: alttaki katman işlenmiş, üstteki katman orijinal; --p kaydırıcı konumu */
+  /* Karşılaştırma kaydırıcısı: alttaki katman işlenmiş, üstteki orijinal; --p kaydırıcı konumu */
   .cmp{position:relative;overflow:hidden;background:#0d0f14;user-select:none}
   .cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
   .cmp .ov{clip-path:inset(0 calc(100% - var(--p,50%)) 0 0)}
@@ -53,8 +54,6 @@
   .cmp input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;z-index:2;touch-action:pan-y}
   .cmp input:focus-visible ~ .knob{outline:2px solid #fff;outline-offset:3px}
   .cmp .tag{position:absolute;bottom:8px;padding:2px 8px;font:500 12px/1.5 "IBM Plex Sans",sans-serif;background:rgba(7,8,11,.78);color:#dde3ec;pointer-events:none}
-  .cmp .expand{position:absolute;top:8px;right:8px;z-index:3;padding:6px;background:rgba(7,8,11,.78);border:1px solid #1e222d;color:#dde3ec}
-  .cmp .expand:hover{border-color:#8a93a3}
 </style>
 </head>
 
@@ -64,14 +63,10 @@
 <header class="fixed top-0 inset-x-0 z-40 bg-obs-950/80 backdrop-blur border-b border-obs-700">
   <nav class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
     <a href="#top" class="font-display font-semibold tracking-wide">T. Ay</a>
-    <ul class="hidden sm:flex gap-6 text-sm text-mute">
-      <li><a class="hover:text-ink" href="#skills">Yetkinlikler</a></li>
-      <li><a class="hover:text-ink" href="#spotlight">Project PM535-T</a></li>
-      <li><a class="hover:text-ink" href="#shipped">Tamamlanan</a></li>
-      <li><a class="hover:text-ink" href="#design">Tasarım</a></li>
-      <li><a class="hover:text-ink" href="#modeling">Modelleme</a></li>
-      <li><a class="hover:text-ink" href="#presentations">Sunumlar</a></li>
-      <li><a class="hover:text-ink" href="#cv">Özgeçmiş</a></li>
+    <ul class="flex gap-5 sm:gap-6 text-sm text-mute">
+      <li><a class="hover:text-ink" href="#spotlight">Öne çıkan</a></li>
+      <li><a class="hover:text-ink" href="#works">Çalışmalar</a></li>
+      <li><a class="hover:text-ink" href="#about">Hakkımda</a></li>
       <li><a class="hover:text-ink" href="#contact">İletişim</a></li>
     </ul>
   </nav>
@@ -79,7 +74,7 @@
 
 <main id="top">
 
-<!-- ================= 1. HERO ================= -->
+<!-- ================= HERO ================= -->
 <section class="relative pt-32 pb-20 overflow-hidden">
   <div class="scanlines absolute inset-0 pointer-events-none"></div>
   <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-[1.25fr_1fr] gap-12 items-center relative">
@@ -92,8 +87,8 @@
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#spotlight" class="px-5 py-3 bg-plague text-obs-950 font-display font-semibold rounded-sm hover:brightness-110">Öne Çıkan Projeyi İncele</a>
-        <a href="#shipped" class="px-5 py-3 border border-scan text-scan font-display font-semibold rounded-sm hover:bg-scan/10">Tamamlanan Projeler</a>
-                <a href="assets/Tolgahan-Ay-CV.pdf" download class="px-5 py-3 border border-obs-700 text-ink font-display font-semibold rounded-sm hover:border-mute inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>CV İndir</a>
+        <a href="#works" class="px-5 py-3 border border-scan text-scan font-display font-semibold rounded-sm hover:bg-scan/10">Tamamlanan Projeler</a>
+        <a href="assets/Tolgahan-Ay-CV.pdf" download class="px-5 py-3 border border-obs-700 text-ink font-display font-semibold rounded-sm hover:border-mute inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>CV İndir</a>
       </div>
       <div class="mt-6 flex gap-4 text-mute">
         <a href="https://github.com/Togi1" target="_blank" rel="noopener" aria-label="GitHub" class="hover:text-ink"><i data-lucide="github"></i></a>
@@ -103,7 +98,7 @@
       </div>
     </div>
 
-    <!-- Hero'nun akılda kalan anı: oynanabilir mini "dosya" paneli (oyunun core loop'unun küçük bir tadı) -->
+    <!-- Hero'nun akılda kalan anı: Project PM535-T'nin core loop'undan küçük bir "dosya" demosu -->
     <aside class="relative bg-obs-900 border border-obs-700 rounded-sm p-5 overflow-hidden" aria-label="Project PM535-T mini demo">
       <div class="scan-line"></div>
       <div class="flex justify-between font-mono text-xs text-mute mb-4"><span>PM535-T · SINIR LABORATUVARI</span><span id="d-id">DOSYA #0417</span></div>
@@ -124,456 +119,116 @@
   </div>
 </section>
 
-<!-- ================= 2. YETKİNLİKLER ================= -->
-<section id="skills" class="py-20 border-t border-obs-700">
-  <div class="max-w-6xl mx-auto px-5">
-    <h2 class="font-display text-3xl font-bold">Yetkinlikler</h2>
-    <p class="text-mute mt-2 max-w-xl">Aşağıdakilerin tamamı ya yayınlanmış kodumda ya da geliştirdiğim tasarım belgesinde karşılık buluyor.</p>
-    <div class="mt-10 grid md:grid-cols-3 gap-px bg-obs-700 border border-obs-700">
-      <div class="bg-obs-900 p-6">
-        <i data-lucide="terminal" class="text-scan mb-3"></i>
-        <h3 class="font-display text-lg font-semibold">Diller &amp; Motorlar</h3>
-        <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
-          <li>C# (temel/orta seviye; Microsoft C# Foundational sertifikalı)</li>
-          <li>Python (veri yapıları, OOP, algoritma)</li>
-          <li>Unity 2D &amp; 3D: Rigidbody, trigger, coroutine, UI</li>
-          <li>Unreal Engine (giriş), Blender (başlangıç), Git / GitHub</li>
-        </ul>
-      </div>
-      <div class="bg-obs-900 p-6">
-        <i data-lucide="boxes" class="text-scan mb-3"></i>
-        <h3 class="font-display text-lg font-semibold">Sistem Mimarisi &amp; Kodlama Desenleri</h3>
-        <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
-          <li>ScriptableObject ile veri odaklı tasarım (FishData)</li>
-          <li>Ağırlıklı rastgele seçim ve dinamik fiyat hesabı</li>
-          <li>State yönetimi: UI paneli, mini oyun, duraklatma</li>
-          <li>Save sistemleri (PlayerPrefs)</li>
-        </ul>
-      </div>
-      <div class="bg-obs-900 p-6">
-        <i data-lucide="drama" class="text-plague mb-3"></i>
-        <h3 class="font-display text-lg font-semibold">Oyun &amp; Mekanik Tasarımı</h3>
-        <ul class="mt-3 space-y-1.5 text-ink/85 text-sm">
-          <li>Core loop tasarımı</li>
-          <li>Ahlaki ikilem sistemleri</li>
-          <li>Kural sistemi ve test limitleri tasarımı (Project PM535-T)</li>
-          <li>Proje yönetimi ve ekip koordinasyonu (Project PM535-T)</li>
-          <li>Bütçe / kaynak yönetimi mekaniği</li>
-          <li>Oyun dengeleme (hız, zorluk, ekonomi eğrileri)</li>
-          <li>2D piksel görsel üretimi (Pixel Angler'ın tüm çizimleri)</li>
-          <li>Anlatı tasarımı ve çoklu son kurgusu</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= 3. SPOTLIGHT: PROJECT PM535-T ================= -->
+<!-- ================= ÖNE ÇIKAN PROJE ================= -->
 <section id="spotlight" class="py-20 border-t border-obs-700 bg-obs-900">
-  <div class="max-w-6xl mx-auto px-5">
-    <span class="inline-flex items-center gap-2 px-3 py-1 border border-plague text-plague text-sm font-display">
-      <span class="w-2 h-2 rounded-full bg-plague"></span>In Development — Release: 4 Months
-    </span>
-    <h2 class="font-display text-4xl sm:text-5xl font-bold mt-5">Project PM535-T</h2>
-    <p class="text-mute mt-1 font-mono text-sm">Geçici ad · Petrium Studio · Virüs: PO535-V</p>
-    <p class="mt-4 max-w-2xl text-lg">2D point-and-click tıbbi ve dedektiflik simülasyonu. Sınır karantina bölgesindeki laboratuvarda tarama doktorusun: belgeleri, tıbbi geçmişleri ve test sonuçlarını inceleyip kimin araştırma bölgesine gireceğine karar verirsin. Tema: Frontier.</p>
-    <div class="mt-5 flex flex-col gap-1.5 text-sm max-w-3xl">
-      <p><b class="font-display text-plague">Rolüm: Game Designer ve Project Manager.</b> Kural sistemini, test limitlerini ve çekirdek mekanikleri tasarlıyor, projenin planını ve ekip koordinasyonunu yönetiyorum.</p>
-      <p class="text-mute">Ekip: Yavuz Yunusoğlu (yazılım), Oğuz Tok (anlatı), İliser Zehra Çabuk (sanat). Durum: henüz oynanabilir sürüm yok.</p>
+  <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
+    <!-- Teaser videosu: assets/latent-paralysis-teaser.mp4 -->
+    <div class="vid-box relative aspect-video bg-obs-950 border border-obs-700">
+      <video id="sp-video" muted loop playsinline preload="none" data-src="assets/latent-paralysis-teaser.mp4" class="w-full h-full object-cover" aria-label="Project PM535-T teaser"></video>
+      <p class="fb absolute inset-0 place-items-center text-mute text-sm font-mono text-center p-4">assets/latent-paralysis-teaser.mp4 bekleniyor</p>
+      <button id="sp-fs" class="absolute bottom-3 right-3 inline-flex items-center gap-2 bg-obs-950/80 border border-obs-700 px-3 py-1.5 text-sm hover:border-mute"><i data-lucide="maximize" class="w-4 h-4"></i>Tam ekran</button>
     </div>
 
-    <div class="mt-10 grid lg:grid-cols-[1.4fr_1fr] gap-8">
-      <!-- Teaser videosu: assets/latent-paralysis-teaser.mp4 -->
-      <figure>
-        <div class="vid-wrap relative aspect-video bg-obs-950 border border-obs-700 group" data-title="Project PM535-T — Teaser">
-          <video muted loop playsinline preload="none" data-src="assets/latent-paralysis-teaser.mp4" aria-label="Project PM535-T teaser"></video>
-          <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/latent-paralysis-teaser.mp4 bekleniyor</div>
-          <button class="open-video absolute inset-0 flex items-end justify-end p-3" aria-label="Teaser'ı tam ekran aç">
-            <span class="inline-flex items-center gap-2 bg-obs-950/80 border border-obs-700 px-3 py-1.5 text-sm"><i data-lucide="maximize" class="w-4 h-4"></i>Tam ekran</span>
-          </button>
-        </div>
-        <figcaption class="text-xs text-mute mt-2">Geliştirme günlüğü ve atmosfer teaser'ı</figcaption>
-      </figure>
-
-      <div class="space-y-5">
-        <div>
-          <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4 text-plague"></i>Yanıltıcı genelge ve sınırlı bütçe</h3>
-          <p class="text-sm text-ink/85 mt-1">Yolsuzluk yüzünden kişi başına test sayısı kısıtlı. Devlet, istemediği grupları elemek için sahte belirtiler yayınlıyor. Kaynak kıtlığıyla sahte kural arasındaki gerilim temel baskı.</p>
-        </div>
-        <div>
-          <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="microscope" class="w-4 h-4 text-scan"></i>Tıbbi veri analizi</h3>
-          <p class="text-sm text-ink/85 mt-1">Belirtileri çaprazla; kanda çıkmayan hastalık idrarda çıkabilir, yanlış pozitifler var. İlaç, alkol, madde kullanımı ve panik belirtileri maskeleyebiliyor; tek test kesin teşhis vermiyor.</p>
-        </div>
-        <div>
-          <h3 class="font-display font-semibold flex items-center gap-2"><i data-lucide="tv" class="w-4 h-4 text-scan"></i>Arıza eventleri ve gün sonu anlatısı</h3>
-          <p class="text-sm text-ink/85 mt-1">Cihazlar bozulur, sistem kesilir, kural kitabı bir süre görünmez. Gün sonunda hastalarla konuşulur, ertesi sabah kararlarının sonucu televizyon haberlerinde karşına çıkar.</p>
-        </div>
-        <div class="flex flex-wrap gap-2 text-xs font-mono text-mute pt-1">
-          <span class="border border-obs-700 px-2 py-1">Unity</span><span class="border border-obs-700 px-2 py-1">2D Point-and-Click</span><span class="border border-obs-700 px-2 py-1">Kural sistemi tasarımı</span><span class="border border-obs-700 px-2 py-1">Proje yönetimi</span>
-        </div>
-        <button id="open-gdd" class="mt-2 px-5 py-3 bg-plague text-obs-950 font-display font-semibold hover:brightness-110 inline-flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>GDD &amp; Sistem Tasarımını Oku</button>
-      </div>
+    <div>
+      <span class="inline-flex items-center gap-2 px-3 py-1 border border-plague text-plague text-sm font-display">
+        <span class="w-2 h-2 rounded-full bg-plague"></span>In Development — Release: 4 Months
+      </span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold mt-5">Project PM535-T</h2>
+      <p class="text-mute mt-1 font-mono text-sm">Geçici ad · Petrium Studio</p>
+      <p class="mt-4 text-lg leading-relaxed">2D point-and-click tıbbi ve dedektiflik simülasyonu. Sınır karantina bölgesindeki laboratuvarda tarama doktorusun: belgeleri, tıbbi geçmişleri ve test sonuçlarını inceleyip kimin araştırma bölgesine gireceğine karar verirsin.</p>
+      <p class="mt-4 text-sm"><b class="font-display text-plague">Rolüm: Game Designer ve Project Manager.</b> Kural sistemini, test limitlerini ve çekirdek mekanikleri tasarlıyor, projenin planını ve ekip koordinasyonunu yönetiyorum.</p>
+      <button id="open-gdd" class="mt-6 px-5 py-3 bg-plague text-obs-950 font-display font-semibold hover:brightness-110 inline-flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>GDD &amp; Sistem Tasarımını Oku</button>
     </div>
   </div>
 </section>
 
-<!-- ================= 4. TAMAMLANMIŞ PROJE ================= -->
-<section id="shipped" class="py-20 border-t border-obs-700">
+<!-- ================= ÇALIŞMALAR (kategorili, kartlar popup açar) ================= -->
+<section id="works" class="py-20 border-t border-obs-700">
   <div class="max-w-6xl mx-auto px-5">
-    <h2 class="font-display text-3xl font-bold">Tamamlanan Projeler</h2>
+    <h2 class="font-display text-3xl font-bold">Çalışmalar</h2>
+    <p class="text-mute mt-2">Bir karta tıklayınca ayrıntıları açılır.</p>
+    <!-- Sekmeler ve kartlar aşağıdaki JS'te üretilir -->
+    <div id="tabs" role="tablist" aria-label="Çalışma kategorileri" class="mt-8 flex gap-7 overflow-x-auto border-b border-obs-700"></div>
+    <div id="works-grid" role="tabpanel" class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+  </div>
+</section>
 
-    <article class="mt-10 grid lg:grid-cols-2 gap-10">
-      <!-- Oynanış videosu: assets/gameplay.mp4 -->
-      <div class="vid-wrap relative aspect-video bg-obs-900 border border-obs-700" data-title="Pixel Angler — Oynanış">
-        <video muted loop playsinline preload="none" data-src="assets/gameplay.mp4" aria-label="Pixel Angler oynanış"></video>
-        <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/gameplay.mp4 bekleniyor</div>
-        <button class="open-video absolute inset-0" aria-label="Oynanış videosunu büyüt"></button>
-      </div>
-
+<!-- ================= HAKKIMDA + YETKİNLİKLER ================= -->
+<section id="about" class="py-20 border-t border-obs-700 bg-obs-900">
+  <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-[1fr_1.3fr] gap-12">
+    <div>
+      <h2 class="font-display text-3xl font-bold">Hakkımda</h2>
+      <p class="mt-4 text-ink/85 leading-relaxed max-w-prose">Muğla Sıtkı Koçman Üniversitesi Dijital Oyun Tasarımı bölümü öğrencisiyim. Oyun mekanikleri kurgulama, C# ile oyun içi sistem geliştirme ve 3D asset/modelleme süreçlerine odaklanıyorum. Teknik merakımı ve problem çözme yaklaşımımı lise döneminde okul birinciliği ve tescilli iki adet patent çalışmasıyla somutlaştırdım. Oyun döngüleri (game loops), seviye tasarımı ve 3D modelleme entegrasyonu alanlarında kendimi geliştirerek, yaratıcı fikirleri optimize edilmiş oynanabilir mekaniklere dönüştüren bir Game Designer / Developer adayıyım.</p>
+      <p class="mt-4 text-sm text-mute">Muğla Sıtkı Koçman Üniversitesi, Dijital Oyun Tasarımı · Muğla / Bodrum</p>
+      <button id="open-cv" class="mt-6 px-5 py-3 border border-scan text-scan font-display font-semibold hover:bg-scan/10 inline-flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i>Özgeçmişi gör</button>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-8">
       <div>
-        <h3 class="font-display text-2xl font-semibold">Pixel Angler</h3>
-        <p class="text-mute text-sm mt-1">2D balık tutma ve ekonomi oyunu · Unity</p>
-        <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
-          <dt class="text-mute">Motor</dt><dd>Unity 2D, C#</dd>
-          <dt class="text-mute">Süreç</dt><dd>Tek başıma, yaklaşık 3 günde geliştirdim</dd>
-          <dt class="text-mute">Görsel</dt><dd>Oyundaki tüm çizimler bana ait</dd>
-          <dt class="text-mute">Sistemler</dt><dd>Olta atma, ısırma bekleme, yakalama mini oyunu, envanter, dükkan</dd>
-          <dt class="text-mute">Teknikler</dt><dd>ScriptableObject, Coroutine, Rigidbody2D, TextMeshPro, PlayerPrefs</dd>
-        </dl>
-
-        <h4 class="font-display font-semibold mt-6">Case study: veri odaklı balık havuzu</h4>
-        <p class="text-sm text-ink/85 mt-2 leading-relaxed">
-          Her balık, kodun değil editörün sahip olduğu bir <code class="font-mono text-scan">FishData</code> ScriptableObject'i. Ağırlık, zorluk, taban fiyat ve çıkma ihtimali tek yerde duruyor; yeni balık eklemek script yazmak yerine asset oluşturmak demek.
-          Şamandıra balık vurduğunda <code class="font-mono text-scan">spawnChance</code> değerleriyle ağırlıklı rastgele seçim yapılıyor: toplam ağırlık içinde rastgele bir sayı çekilip kümülatif toplamla karşılaştırılıyor. Sazan 100, efsanevi balık 5 gibi değerlerle nadirlik tasarlanabiliyor.
-        </p>
-        <p class="text-sm text-ink/85 mt-3 leading-relaxed">
-          Aynı veri mini oyunu da besliyor: balığın <code class="font-mono text-scan">catchDifficulty</code> değeri hareket hızını çarpıyor ve satış fiyatı <code class="font-mono text-scan">GetDynamicPrice()</code> ile aynı zorluktan türüyor. Zorluk, ödül ve nadirlik tek bir veri kaynağından dengeleniyor. Dükkandaki yükseltmeler her alımda üstel maliyet artışıyla (×1.5) ilerliyor.
-        </p>
-        <p class="text-sm text-mute mt-3 leading-relaxed">
-          Bir sonraki iterasyonda planım: <code class="font-mono">FindFirstObjectByType</code> çağrılarını event'lere taşımak ve çanta için tek bir envanter listesi kullanmak.
-        </p>
-        <div class="mt-5 flex flex-wrap gap-3">
-          <button class="open-code px-5 py-3 border border-scan text-scan font-display font-semibold hover:bg-scan/10 inline-flex items-center gap-2" data-src="code-src" data-title="FishData.cs + Bobber.cs (ağırlıklı seçim)"><i data-lucide="code-2" class="w-4 h-4"></i>Kaynak Kodu İncele</button>
-          <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display hover:border-mute inline-flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i>GitHub</a>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== Proje 2: 3D Dart ===== -->
-    <article class="mt-16 pt-16 border-t border-obs-700 grid lg:grid-cols-2 gap-10">
-      <!-- Oynanış videosu: assets/dart-gameplay.mp4 -->
-      <div class="vid-wrap relative aspect-video bg-obs-900 border border-obs-700" data-title="3D Dart — Oynanış">
-        <video muted loop playsinline preload="none" data-src="assets/dart-gameplay.mp4" aria-label="3D Dart oynanış"></video>
-        <div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">assets/dart-gameplay.mp4 bekleniyor</div>
-        <button class="open-video absolute inset-0" aria-label="Dart oynanış videosunu büyüt"></button>
+        <h3 class="font-display font-semibold">Diller &amp; motorlar</h3>
+        <ul class="mt-3 flex flex-wrap gap-2 text-sm">
+          <li class="border border-obs-700 px-2.5 py-1">C#</li><li class="border border-obs-700 px-2.5 py-1">Python</li><li class="border border-obs-700 px-2.5 py-1">Unity 2D / 3D</li><li class="border border-obs-700 px-2.5 py-1">Blender</li><li class="border border-obs-700 px-2.5 py-1">Git / GitHub</li>
+        </ul>
       </div>
       <div>
-        <h3 class="font-display text-2xl font-semibold">3D Dart</h3>
-        <p class="text-mute text-sm mt-1">Fizik tabanlı 3D dart oyunu · Unity</p>
-        <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
-          <dt class="text-mute">Motor</dt><dd>Unity 3D, C#</dd>
-          <dt class="text-mute">Süreç</dt><dd>Tek başıma, yaklaşık 3 günde geliştirdim</dd>
-          <dt class="text-mute">Sistemler</dt><dd>Kaydırarak fırlatma, fizik tabanlı uçuş, sekme/saplanma, puan bölgeleri, takip kamerası, menü</dd>
-          <dt class="text-mute">Teknikler</dt><dd>Rigidbody, ForceMode.Impulse, Collision, tag kontrolü, AudioSource, prefab efektleri</dd>
-        </dl>
-        <h4 class="font-display font-semibold mt-6">Case study: kaydırma hareketini fiziğe çevirmek</h4>
-        <p class="text-sm text-ink/85 mt-2 leading-relaxed">
-          Oyuncu fareyi basılı tutup bırakıyor; <code class="font-mono text-scan">DartFirlatma</code> basma ve bırakma noktaları arasındaki farkı alıp <code class="font-mono text-scan">firlatmaGucu</code> ile ölçekliyor, sabit bir ileri kuvvetle birleştirip tek bir impuls olarak uyguluyor. Kaydırmanın yönü ve uzunluğu atışın yönünü ve gücünü belirliyor.
-          Uçuşta dart'ın ucu her kare hız vektörüne dönüyor, böylece hareket inandırıcı görünüyor.
-        </p>
-        <p class="text-sm text-ink/85 mt-3 leading-relaxed">
-          Çarpışmada atışın sonucu hem fiziğe hem şansa bağlı: dart hızlı düşüyorsa ya da <code class="font-mono text-scan">sekmeSansi</code> zarı tutarsa sekiyor, aksi halde tahtaya saplanıp vurulan bölgenin puanını ekliyor. Tüm değerler inspector'dan ayarlanabiliyor, yani oyun hissi kod değiştirmeden dengeleniyor.
-        </p>
-        <p class="text-sm text-mute mt-3 leading-relaxed">
-          Bir sonraki iterasyonda planım: string tabanlı <code class="font-mono">Invoke</code> çağrılarını coroutine'e, <code class="font-mono">FindFirstObjectByType</code> çağrılarını event'e çevirmek.
-        </p>
-        <div class="mt-5 flex flex-wrap gap-3">
-          <button class="open-code px-5 py-3 border border-scan text-scan font-display font-semibold hover:bg-scan/10 inline-flex items-center gap-2" data-src="code-src-dart" data-title="DartFirlatma.cs (fırlatma ve çarpışma)"><i data-lucide="code-2" class="w-4 h-4"></i>Kaynak Kodu İncele</button>
-          <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display hover:border-mute inline-flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i>GitHub</a>
-        </div>
+        <h3 class="font-display font-semibold">Sistem mimarisi</h3>
+        <ul class="mt-3 flex flex-wrap gap-2 text-sm">
+          <li class="border border-obs-700 px-2.5 py-1">ScriptableObject veri yapıları</li><li class="border border-obs-700 px-2.5 py-1">State yönetimi</li><li class="border border-obs-700 px-2.5 py-1">Save sistemleri</li><li class="border border-obs-700 px-2.5 py-1">Ağırlıklı rastgele seçim</li><li class="border border-obs-700 px-2.5 py-1">Fizik tabanlı mekanikler</li>
+        </ul>
       </div>
-    </article>
-  </div>
-</section>
-
-<!-- ================= TASARIM ================= -->
-<section id="design" class="py-20 border-t border-obs-700">
-  <div class="max-w-6xl mx-auto px-5">
-    <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 class="font-display text-3xl font-bold">Tasarım</h2>
-        <p class="text-mute mt-2 max-w-xl">Fotoğraf manipülasyonu çalışmaları. Her karedeki çizgiyi sürükleyerek orijinal ile işlenmiş hâli karşılaştırabilirsin.</p>
+        <h3 class="font-display font-semibold">Oyun &amp; mekanik tasarımı</h3>
+        <ul class="mt-3 flex flex-wrap gap-2 text-sm">
+          <li class="border border-obs-700 px-2.5 py-1">Core loop</li><li class="border border-obs-700 px-2.5 py-1">Ahlaki ikilem sistemleri</li><li class="border border-obs-700 px-2.5 py-1">Kaynak yönetimi</li><li class="border border-obs-700 px-2.5 py-1">Oyun dengeleme</li><li class="border border-obs-700 px-2.5 py-1">Kural sistemi tasarımı</li><li class="border border-obs-700 px-2.5 py-1">Anlatı tasarımı</li><li class="border border-obs-700 px-2.5 py-1">Proje yönetimi</li>
+        </ul>
       </div>
-      <a href="#presentations" class="text-sm text-scan hover:underline inline-flex items-center gap-2"><i data-lucide="presentation" class="w-4 h-4"></i>Sunum olarak izle ve indir</a>
-    </div>
-    <!-- Kartlar aşağıdaki JS'te "designs" dizisinden üretilir -->
-    <div id="design-grid" class="mt-10 columns-1 sm:columns-2 lg:columns-3 gap-6"></div>
-  </div>
-</section>
-
-<!-- ================= MODELLEME ================= -->
-<section id="modeling" class="py-20 border-t border-obs-700 bg-obs-900">
-  <div class="max-w-6xl mx-auto px-5">
-    <h2 class="font-display text-3xl font-bold">Modelleme</h2>
-    <p class="text-mute mt-2 max-w-xl">Blender ile hazırladığım 3D modeller. Bir görsele tıklayınca büyür.</p>
-    <!-- Kartlar aşağıdaki JS'te "models" dizisinden üretilir -->
-    <div id="model-grid" class="mt-10 columns-1 sm:columns-2 lg:columns-3 gap-6"></div>
-  </div>
-</section>
-
-<!-- ================= SUNUMLAR ================= -->
-<section id="presentations" class="py-20 border-t border-obs-700">
-  <div class="max-w-6xl mx-auto px-5">
-    <h2 class="font-display text-3xl font-bold">Sunumlar</h2>
-    <p class="text-mute mt-2 max-w-xl">Tasarım çalışmalarımı anlatan iki sunum. Tarayıcıda önizleyebilir, PPTX olarak indirebilirsin.</p>
-    <div class="mt-10 grid lg:grid-cols-2 gap-8">
-
-      <!-- Sunum 1: Fotoğraf manipülasyonu (assets/Tasarim-Sunumu.pptx) -->
-      <article class="border border-obs-700 bg-obs-900 flex flex-col">
-        <img src="assets/presentations/foto-sunum.jpg" alt="Fotoğraf manipülasyonu sunumundan bir slayt: orijinal ve işlenmiş perde fotoğrafı yan yana" class="w-full aspect-video object-cover" loading="lazy">
-        <div class="p-6 flex-1 flex flex-col">
-          <h3 class="font-display text-xl font-semibold">Fotoğraf manipülasyonu</h3>
-          <p class="font-mono text-xs text-mute mt-1">8 slayt · PPTX</p>
-          <p class="text-sm text-ink/85 mt-3 max-w-prose">Yedi fotoğrafın orijinal ve işlenmiş hâli yan yana. Her slaytta neyin değiştiği kısa bir notla anlatılıyor.</p>
-          <div class="mt-auto pt-6 flex flex-wrap gap-3">
-            <button id="open-deck" class="px-5 py-3 bg-plague text-obs-950 font-display font-semibold hover:brightness-110 inline-flex items-center gap-2"><i data-lucide="presentation" class="w-4 h-4"></i>Önizle</button>
-            <a href="assets/Tasarim-Sunumu.pptx" download class="px-5 py-3 border border-obs-700 font-display font-semibold hover:border-mute inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>PPTX indir</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Sunum 2: Tema sunumu (assets/Tema-Sunumu.pptx dosyasını bu adla ekle) -->
-      <article class="border border-obs-700 bg-obs-900 flex flex-col">
-        <img src="assets/presentations/tema-1.jpg" alt="Tema sunumundan Frontier teması slaytı" class="w-full aspect-video object-cover" loading="lazy">
-        <div class="p-6 flex-1 flex flex-col">
-          <h3 class="font-display text-xl font-semibold">Tema sunumu: Frontier, Red, Dreamcore</h3>
-          <p class="font-mono text-xs text-mute mt-1">PPTX</p>
-          <p class="text-sm text-ink/85 mt-3 max-w-prose">Tasarım bölümündeki kule, kilise ve koridor çalışmaları üzerine kurulu üç atmosfer teması. Her tema için renk sistemi, tipografi, doku, ikon, tabela ve form dili tanımlandı.</p>
-          <ul class="mt-4 space-y-3 text-sm">
-            <li class="flex items-start gap-3">
-              <span class="flex gap-1 pt-1 shrink-0" aria-hidden="true"><i class="w-3.5 h-3.5 border border-obs-700" style="background:#00B044"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#BCADCE"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#7E6CA5"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#1E277A"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#050507"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#D0222D"></i></span>
-              <span><b class="font-display">Frontier</b><span class="text-mute"> · yalıtılmışlık, donmuş karakol, bilimsel keşif</span></span>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex gap-1 pt-1 shrink-0" aria-hidden="true"><i class="w-3.5 h-3.5 border border-obs-700" style="background:#F00202"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#B18556"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#66371F"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#210200"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#030200"></i></span>
-              <span><b class="font-display">Red</b><span class="text-mute"> · gotik korku, yaklaşan felaket, kutsal mimari, geçen zaman</span></span>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex gap-1 pt-1 shrink-0" aria-hidden="true"><i class="w-3.5 h-3.5 border border-obs-700" style="background:#F8F8F8"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#B6B6B6"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#575757"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#121212"></i><i class="w-3.5 h-3.5 border border-obs-700" style="background:#000000"></i></span>
-              <span><b class="font-display">Dreamcore</b><span class="text-mute"> · liminal mekânlar, déjà vu, halüsinasyon belleği, tekinsiz yalnızlık</span></span>
-            </li>
-          </ul>
-          <div class="mt-auto pt-6 flex flex-wrap gap-3">
-            <button id="open-theme" class="px-5 py-3 bg-plague text-obs-950 font-display font-semibold hover:brightness-110 inline-flex items-center gap-2"><i data-lucide="presentation" class="w-4 h-4"></i>Önizle</button>
-            <a href="assets/Tema-Sunumu.pptx" download class="px-5 py-3 border border-obs-700 font-display font-semibold hover:border-mute inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>PPTX indir</a>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ================= ÖZGEÇMİŞ (CV) ================= -->
-<section id="cv" class="py-20 border-t border-obs-700">
-  <div class="max-w-6xl mx-auto px-5">
-    <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 class="font-display text-3xl font-bold">Özgeçmiş</h2>
-        <p class="text-mute mt-2">Dijital Oyun Tasarımı Öğrencisi &amp; Yazılım Geliştirici Adayı · Muğla / Bodrum</p>
-      </div>
-      <a href="assets/Tolgahan-Ay-CV.pdf" download class="px-5 py-3 bg-scan text-obs-950 font-display font-semibold inline-flex items-center gap-2 hover:brightness-110"><i data-lucide="download" class="w-4 h-4"></i>CV'yi PDF indir</a>
-    </div>
-
-    <div class="mt-10 grid lg:grid-cols-[1.2fr_1fr] gap-10">
-      <div class="space-y-10">
-        <div>
-          <h3 class="font-display font-semibold text-lg">Hakkımda</h3>
-          <p class="mt-2 text-ink/85 leading-relaxed max-w-prose">Muğla Sıtkı Koçman Üniversitesi Dijital Oyun Tasarımı bölümü öğrencisiyim. Oyun mekanikleri kurgulama, C# ile oyun içi sistem geliştirme ve 3D asset/modelleme süreçlerine odaklanıyorum. Teknik merakımı ve problem çözme yaklaşımımı lise döneminde okul birinciliği ve tescilli iki adet patent çalışmasıyla somutlaştırdım. Oyun döngüleri (game loops), seviye
-tasarımı ve 3D modelleme entegrasyonu alanlarında kendimi geliştirerek, yaratıcı fikirleri optimize edilmiş oynanabilir
-mekaniklere dönüştüren bir Game Designer / Developer adayıyım.</p>
-        </div>
-
-        <div>
-          <h3 class="font-display font-semibold text-lg">Eğitim</h3>
-          <ol class="mt-3 border-l border-obs-700 ml-1 space-y-5">
-            <li class="pl-5 relative"><span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-scan"></span>
-              <p class="font-medium">Muğla Sıtkı Koçman Üniversitesi, Dijital Oyun Tasarımı</p><p class="text-sm text-mute">2025 – devam ediyor</p></li>
-            <li class="pl-5 relative"><span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-obs-700"></span>
-              <p class="font-medium">Lise</p><p class="text-sm text-mute">Okul birincisi olarak mezun</p></li>
-          </ol>
-        </div>
-
-        <div>
-          <h3 class="font-display font-semibold text-lg">Ar-Ge ve patentler</h3>
-          <div class="mt-3 grid sm:grid-cols-2 gap-px bg-obs-700 border border-obs-700 text-sm">
-            <div class="bg-obs-900 p-4"><p class="font-medium">Çizgi İzleyen Robot</p><p class="text-mute mt-1">Robotik kodlama ve donanım entegrasyonu</p><p class="font-mono text-xs text-scan mt-2">TR2022017364U5</p></div>
-            <div class="bg-obs-900 p-4"><p class="font-medium">USB / Mini SD / SD Kart Girişli Kalemlik</p><p class="text-mute mt-1">Ürün geliştirme ve inovatif tasarım</p><p class="font-mono text-xs text-scan mt-2">TR2022018474A2</p></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-10">
-        <div>
-          <h3 class="font-display font-semibold text-lg">Teknik seviyeler</h3>
-          <ul class="mt-3 divide-y divide-obs-700 text-sm border-y border-obs-700">
-            <li class="flex justify-between py-2"><span>Robotik kodlama</span><span class="text-mute">Gelişmiş</span></li>
-            <li class="flex justify-between py-2"><span>C#</span><span class="text-mute">Temel / Orta</span></li>
-            <li class="flex justify-between py-2"><span>Python (veri yapıları, OOP, algoritma)</span><span class="text-mute">Temel / Orta</span></li>
-            <li class="flex justify-between py-2"><span>Unity &amp; Unreal Engine</span><span class="text-mute">Giriş</span></li>
-            <li class="flex justify-between py-2"><span>Blender animasyon</span><span class="text-mute">Başlangıç</span></li>
-            <li class="flex justify-between py-2"><span>İngilizce</span><span class="text-mute">B1</span></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-display font-semibold text-lg">Sertifikalar</h3>
-          <ul class="mt-3 space-y-1.5 text-sm text-ink/85">
-            <li>C# Foundational (Microsoft)</li>
-            <li>DiscoverEU Participant / Cultural Mobility Experience (European Commission)</li>
-            <li>Robotik Kodlama Uzmanlık</li>
-            <li>Temel Robotik Kodlama</li>
-            <li>Bilgisayar İşletmenliği</li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-display font-semibold text-lg">İlgi alanları</h3>
-          <p class="mt-2 text-sm text-ink/85">Lisanslı badminton (7 yıl), teknoloji projeleri ve Ar-Ge, oyun mekanikleri inceleme ve tersine mühendislik.</p>
-        </div>
+        <h3 class="font-display font-semibold">Görsel üretim</h3>
+        <ul class="mt-3 flex flex-wrap gap-2 text-sm">
+          <li class="border border-obs-700 px-2.5 py-1">2D piksel çizim</li><li class="border border-obs-700 px-2.5 py-1">Fotoğraf manipülasyonu</li><li class="border border-obs-700 px-2.5 py-1">3D modelleme</li><li class="border border-obs-700 px-2.5 py-1">Tema ve atmosfer tasarımı</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= 5. İLETİŞİM ================= -->
-<section id="contact" class="py-20 border-t border-obs-700 bg-obs-900">
-  <div class="max-w-3xl mx-auto px-5">
-    <div class="border border-obs-700 bg-obs-800 p-8">
-      <h2 class="font-display text-3xl font-bold">Birlikte bir şey yapalım</h2>
-      <p class="text-mute mt-2">Muğla / Bodrum. Staj, junior pozisyon ve oyun projesi tekliflerine açığım. Kısa bir mesaj yeterli.</p>
-      <div class="mt-6 flex flex-wrap gap-3">
-                <a href="mailto:tolgahan.ay@outlook.com?subject=Portfolyo%20Hakk%C4%B1nda" class="px-5 py-3 bg-scan text-obs-950 font-display font-semibold inline-flex items-center gap-2 hover:brightness-110"><i data-lucide="mail" class="w-4 h-4"></i>E-posta gönder</a>
-        <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="github" class="w-4 h-4"></i>github.com/Togi1</a>
-        <a href="https://www.linkedin.com/in/tolgahan-ay-b729a416b/" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="linkedin" class="w-4 h-4"></i>LinkedIn</a>
-        <a href="https://www.instagram.com/togiiay/" target="_blank" rel="noopener" class="px-5 py-3 border border-obs-700 font-display inline-flex items-center gap-2 hover:border-mute"><i data-lucide="instagram" class="w-4 h-4"></i>Instagram</a>
-      </div>
-    </div>
+<!-- ================= İLETİŞİM ================= -->
+<section id="contact" class="py-20 border-t border-obs-700">
+  <div class="max-w-6xl mx-auto px-5">
+    <h2 class="font-display text-3xl font-bold">Birlikte bir şey yapalım</h2>
+    <p class="text-mute mt-2 max-w-xl">Staj, junior pozisyon ve oyun projesi tekliflerine açığım. Kısa bir mesaj yeterli.</p>
+    <a href="mailto:tolgahan.ay@outlook.com?subject=Portfolyo%20Hakk%C4%B1nda" class="mt-6 px-5 py-3 bg-scan text-obs-950 font-display font-semibold inline-flex items-center gap-2 hover:brightness-110"><i data-lucide="mail" class="w-4 h-4"></i>E-posta gönder</a>
   </div>
 </section>
 </main>
 
-<footer class="py-8 text-center text-xs text-mute border-t border-obs-700">© <span id="year"></span> Tolgahan Ay. Unity ve C# ile geliştirildi.</footer>
+<footer class="py-8 px-5 text-center text-xs text-mute border-t border-obs-700">
+  <p class="max-w-2xl mx-auto leading-relaxed">Bu sitedeki tüm projeler ders kapsamında yapılan çalışmalardır ve ticari amaç içermemektedir.</p>
+  <p class="mt-2">© <span id="year"></span> Tolgahan Ay</p>
+</footer>
 
-<!-- ================= MODALLAR ================= -->
-
-<!-- Video Lightbox -->
-<dialog id="video-modal" aria-label="Video oynatıcı">
-  <div class="w-[min(94vw,1100px)]">
-    <div class="flex justify-between items-center mb-2"><span id="vm-title" class="font-display"></span>
-      <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button></div>
-    <video id="vm-video" class="w-full max-h-[80vh] bg-black" controls loop playsinline></video>
-  </div>
-</dialog>
-
-<!-- GDD Modalı -->
-<dialog id="gdd-modal" aria-label="Project PM535-T tasarım analizi">
-  <div class="w-[min(94vw,920px)] max-h-[90vh] overflow-y-auto bg-obs-900 border border-obs-700 p-6 sm:p-8">
-    <div class="flex justify-between items-start gap-4">
-      <div><h3 class="font-display text-2xl font-bold">Project PM535-T: Tasarım Analizi</h3>
-        <p class="text-mute text-sm mt-1">Game Design Document v0.y.z · Petrium Studio · Yazan: Tolgahan Ay</p></div>
-      <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
+<!-- ================= TEK POPUP: tüm detaylar burada açılır ================= -->
+<dialog id="detail" aria-labelledby="dt-title">
+  <div class="w-[min(96vw,980px)] max-h-[92vh] flex flex-col bg-obs-900 border border-obs-700">
+    <div class="flex items-start justify-between gap-4 p-5 border-b border-obs-700">
+      <div>
+        <h3 id="dt-title" class="font-display text-xl sm:text-2xl font-bold"></h3>
+        <p id="dt-sub" class="text-sm text-mute mt-1"></p>
+      </div>
+      <button class="close shrink-0 px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
-
-    <h4 class="font-display font-semibold mt-6">Oyuncu deneyimi</h4>
-    <div class="mt-3 grid sm:grid-cols-3 gap-px bg-obs-700 border border-obs-700 text-sm">
-      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Ahlaki baskı ve suçluluk</b><p class="mt-1 text-ink/85">Keyfi kurallar yüzünden masumları ölüme terk etmek ile kuralı çiğneyip hastalığı tesise sokmak arasındaki ikilem.</p></div>
-      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Şüphe ve paranoya</b><p class="mt-1 text-ink/85">Devlet yönergelerine, başvuranların samimiyetine, hatta kendi test sonuçlarına bile tam güvenememek.</p></div>
-      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Çaresizlik ve sorumluluk</b><p class="mt-1 text-ink/85">Kısıtlı bütçe ve bozulan cihazlarla, eksik bilgiyle hayat-memat kararları vermek.</p></div>
-    </div>
-
-    <h4 class="font-display font-semibold mt-8">Core loop</h4>
-    <ol class="mt-3 grid sm:grid-cols-2 gap-2 text-sm" id="loop-list"></ol>
-    <p class="text-sm text-ink/85 mt-3">Günün dış döngüsü: akşam kabul edilenlerle konuşma, ertesi sabah kararların televizyon haberlerindeki sonucu, ardından yeni yönergeler. Oyuncu zamanla itaatkâr memur kimliğini bırakıp devletin yönergelerinin yalan olduğunu fark eder ve taraf seçer.</p>
-
-    <h4 class="font-display font-semibold mt-8">Test ve semptom sistemi</h4>
-    <p class="text-sm text-ink/85 mt-2">Klinik belirtiler yapılabilen testlerle birebir eşleşmez. İlaç geçmişi, madde kullanımı ve psikolojik stres belirtileri maskeleyebilir ya da yanlış pozitif üretebilir. Kişi başına yapılabilecek test sayısı sınırlıdır.</p>
-    <div class="mt-3 overflow-x-auto border border-obs-700">
-      <table class="w-full text-sm text-left min-w-[640px]">
-        <thead class="bg-obs-800 text-mute"><tr><th class="p-3 font-medium">Test</th><th class="p-3 font-medium">Ortaya çıkan veri</th><th class="p-3 font-medium">Tetiklenen belirti</th><th class="p-3 font-medium">Tasarım ve yanıltma notu</th></tr></thead>
-        <tbody id="test-rows" class="divide-y divide-obs-700"></tbody>
-      </table>
-    </div>
-
-    <h4 class="font-display font-semibold mt-8">Ahlaki çatışma</h4>
-    <div class="mt-3 grid sm:grid-cols-2 gap-px bg-obs-700 border border-obs-700 text-sm">
-      <div class="bg-obs-800 p-4"><b class="font-display text-plague">Devlet yönergesi</b>
-        <p class="mt-1 text-ink/85">Çöken otoriter yönetim, bütçe açığını örtmek ve muhalifleri, istenmeyen toplulukları elemek için sahte belirti kuralları dayatıyor.</p></div>
-      <div class="bg-obs-800 p-4"><b class="font-display text-scan">Vicdani karar</b>
-        <p class="mt-1 text-ink/85">İpuçları akşam konuşmalarında ve muhalif yayınlarda. Oyuncu yönergelerin sahte olduğunu fark ettikçe kararları da değişir.</p></div>
-    </div>
-
-    <h4 class="font-display font-semibold mt-8">Kazanma ve kaybetme</h4>
-    <div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm">
-      <div class="border border-scan/50 p-4"><b class="font-display text-scan">Kazanma</b><p class="mt-1 text-ink/85">Hastaların yarısından fazlasını (en az 7 kişi) içeri almak.</p></div>
-      <div class="border border-plague/50 p-4"><b class="font-display text-plague">Kaybetme</b><p class="mt-1 text-ink/85">Bu sayıya ulaşılmadan 16 kişilik kota dolarsa.</p></div>
-    </div>
-
-    <h4 class="font-display font-semibold mt-8">Olası sonlar</h4>
-    <div class="mt-3 grid sm:grid-cols-3 gap-3 text-sm">
-      <div class="border border-obs-700 p-4"><b class="font-display">Sadakat</b><p class="mt-1 text-ink/85">Rejime bağlı kalmak.</p></div>
-      <div class="border border-obs-700 p-4"><b class="font-display text-scan">Muhalif devrim</b><p class="mt-1 text-ink/85">Taraf seçip gerçeklerin açığa çıkmasına katkıda bulunmak.</p></div>
-      <div class="border border-obs-700 p-4"><b class="font-display text-plague">İsyan / çöküş</b><p class="mt-1 text-ink/85">Düzenin ve hükümetin dağılması.</p></div>
-    </div>
-
-    <h4 class="font-display font-semibold mt-8">Görsel ve ses</h4>
-    <p class="text-sm text-ink/85 mt-2">Loş renk paleti, retro-distopik tıbbi cihazlar ve aşınmış belge dokusu. Göz kontrolü gibi arayüz öğeleri, tezgâh başındaymış hissi için fiziksel düğme ve kart olarak tasarlandı. Ses; floresan uğultusu, nabız sesleri, bozulan cihaz uyarıları ve boğuk devlet duyurularından oluşuyor, melodik müzik yok.</p>
-  </div>
-</dialog>
-
-<!-- Görsel büyütme: model görselleri ve tema sunumu önizlemesi -->
-<dialog id="img-modal" aria-label="Görsel önizleme">
-  <div class="w-[min(96vw,1000px)]">
-    <div class="flex justify-between items-center mb-2"><span id="im-title" class="font-display"></span>
-      <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button></div>
-    <div id="im-body" class="max-h-[84vh] overflow-y-auto bg-obs-950 border border-obs-700 p-3"></div>
-  </div>
-</dialog>
-
-<!-- Tasarım sunumu: orijinal solda, işlenmiş sağda; ok tuşlarıyla gezinilir -->
-<dialog id="deck-modal" aria-label="Tasarım sunumu">
-  <div class="w-[min(96vw,1200px)] h-[min(92vh,820px)] flex flex-col bg-obs-900 border border-obs-700">
-    <div class="flex items-center justify-between gap-4 p-4 border-b border-obs-700">
-      <div><span id="dk-title" class="font-display font-semibold"></span><span id="dk-count" class="font-mono text-xs text-mute ml-3"></span></div>
-      <div class="flex gap-2">
-        <a href="assets/Tasarim-Sunumu.pptx" download class="px-3 py-1 border border-obs-700 hover:border-mute text-sm inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>PPTX</a>
-        <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
+    <div id="dt-body" class="flex-1 min-h-0 overflow-y-auto p-5 sm:p-6"></div>
+    <!-- Aynı kategorideki önceki / sonraki çalışma -->
+    <div id="dt-foot" hidden>
+      <div class="flex items-center justify-between gap-3 p-4 border-t border-obs-700">
+        <button id="dt-prev" class="px-3 py-2 border border-obs-700 hover:border-mute" aria-label="Önceki çalışma"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <span id="dt-count" class="font-mono text-xs text-mute"></span>
+        <button id="dt-next" class="px-3 py-2 border border-obs-700 hover:border-mute" aria-label="Sonraki çalışma"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
       </div>
     </div>
-    <div class="flex-1 min-h-0 grid grid-cols-2 gap-px bg-obs-700">
-      <figure class="bg-obs-950 min-h-0 flex flex-col"><div class="relative flex-1 min-h-0"><img id="dk-o" class="absolute inset-0 w-full h-full object-contain p-3" alt=""></div><figcaption class="px-4 pb-3 text-sm text-mute">Orijinal</figcaption></figure>
-      <figure class="bg-obs-950 min-h-0 flex flex-col"><div class="relative flex-1 min-h-0"><img id="dk-e" class="absolute inset-0 w-full h-full object-contain p-3" alt=""></div><figcaption class="px-4 pb-3 text-sm text-scan">İşlenmiş</figcaption></figure>
-    </div>
-    <div class="p-4 border-t border-obs-700 flex items-center gap-4">
-      <button id="dk-prev" class="px-3 py-2 border border-obs-700 hover:border-mute" aria-label="Önceki çalışma"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-      <p id="dk-cap" class="flex-1 text-sm text-ink/85"></p>
-      <button id="dk-next" class="px-3 py-2 border border-obs-700 hover:border-mute" aria-label="Sonraki çalışma"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-    </div>
   </div>
 </dialog>
 
-<!-- Kod Modalı -->
-<dialog id="code-modal" aria-label="Kaynak kod">
-  <div class="w-[min(94vw,900px)] max-h-[90vh] flex flex-col bg-obs-900 border border-obs-700">
-    <div class="flex justify-between items-center p-4 border-b border-obs-700">
-      <span id="code-title" class="font-mono text-sm text-mute"></span>
-      <div class="flex gap-2">
-        <button id="copy-code" class="px-3 py-1 border border-obs-700 hover:border-mute text-sm">Kopyala</button>
-        <button class="close px-3 py-1 border border-obs-700 hover:border-mute" aria-label="Kapat"><i data-lucide="x" class="w-4 h-4"></i></button>
-      </div>
-    </div>
-    <pre class="overflow-auto p-5 text-[13px] leading-relaxed font-mono"><code id="code-out"></code></pre>
-  </div>
-</dialog>
-
-<!-- Kod kaynağı: repodaki gerçek kodun sadeleştirilmiş hali (yorumlar eklendi) -->
+<!-- Kod kaynakları: repodaki gerçek kodun sadeleştirilmiş hali -->
 <script type="text/plain" id="code-src">
 // ---- FishData.cs: balık, kodun değil editörün sahip olduğu veri ----
 [CreateAssetMenu(fileName = "YeniBalik", menuName = "PixelAngler/Balik Verisi")]
@@ -683,161 +338,85 @@ void OnCollisionEnter(Collision temas)
 </script>
 
 <script>
-/* ============ Tasarım galerisi: karşılaştırma kaydırıcıları + sunum modu ============ */
-// r = görselin en/boy oranı. Yeni çalışma eklemek için diziye bir satır eklemek yeterli.
+const $ = id => document.getElementById(id);
+const icons = () => { if (window.lucide) lucide.createIcons(); };
+$('year').textContent = new Date().getFullYear();
+
+/* ============ VERİ ============
+   Yeni çalışma eklemek için ilgili diziye bir satır eklemek yeterli. */
+
+// --- Projeler (kart: sessiz döngülü video, popup: kontrollü video + künye + case study + kod) ---
+const projects = [
+  { title:'Pixel Angler', sub:'2D balık tutma ve ekonomi oyunu · Unity', video:'assets/gameplay.mp4',
+    rows:[['Motor','Unity 2D, C#'],['Süreç','Tek başıma, yaklaşık 3 günde geliştirdim'],['Görsel','Oyundaki tüm çizimler bana ait'],
+          ['Sistemler','Olta atma, ısırma bekleme, yakalama mini oyunu, envanter, dükkan'],['Teknikler','ScriptableObject, Coroutine, Rigidbody2D, TextMeshPro, PlayerPrefs']],
+    caseTitle:'Case study: veri odaklı balık havuzu',
+    paras:[
+      'Her balık, kodun değil editörün sahip olduğu bir <code class="font-mono text-scan">FishData</code> ScriptableObject\'i. Ağırlık, zorluk, taban fiyat ve çıkma ihtimali tek yerde duruyor; yeni balık eklemek script yazmak yerine asset oluşturmak demek. Şamandıra balık vurduğunda <code class="font-mono text-scan">spawnChance</code> değerleriyle ağırlıklı rastgele seçim yapılıyor: toplam ağırlık içinde rastgele bir sayı çekilip kümülatif toplamla karşılaştırılıyor. Sazan 100, efsanevi balık 5 gibi değerlerle nadirlik tasarlanabiliyor.',
+      'Aynı veri mini oyunu da besliyor: balığın <code class="font-mono text-scan">catchDifficulty</code> değeri hareket hızını çarpıyor ve satış fiyatı <code class="font-mono text-scan">GetDynamicPrice()</code> ile aynı zorluktan türüyor. Zorluk, ödül ve nadirlik tek bir veri kaynağından dengeleniyor. Dükkandaki yükseltmeler her alımda üstel maliyet artışıyla (×1.5) ilerliyor.'],
+    next:'Bir sonraki iterasyonda planım: <code class="font-mono">FindFirstObjectByType</code> çağrılarını event\'lere taşımak ve çanta için tek bir envanter listesi kullanmak.',
+    code:'code-src', codeTitle:'FishData.cs + Bobber.cs' },
+  { title:'3D Dart', sub:'Fizik tabanlı 3D dart oyunu · Unity', video:'assets/dart-gameplay.mp4',
+    rows:[['Motor','Unity 3D, C#'],['Süreç','Tek başıma, yaklaşık 3 günde geliştirdim'],
+          ['Sistemler','Kaydırarak fırlatma, fizik tabanlı uçuş, sekme/saplanma, puan bölgeleri, takip kamerası, menü'],
+          ['Teknikler','Rigidbody, ForceMode.Impulse, Collision, tag kontrolü, AudioSource, prefab efektleri']],
+    caseTitle:'Case study: kaydırma hareketini fiziğe çevirmek',
+    paras:[
+      'Oyuncu fareyi basılı tutup bırakıyor; <code class="font-mono text-scan">DartFirlatma</code> basma ve bırakma noktaları arasındaki farkı alıp <code class="font-mono text-scan">firlatmaGucu</code> ile ölçekliyor, sabit bir ileri kuvvetle birleştirip tek bir impuls olarak uyguluyor. Kaydırmanın yönü ve uzunluğu atışın yönünü ve gücünü belirliyor. Uçuşta dart\'ın ucu her kare hız vektörüne dönüyor, böylece hareket inandırıcı görünüyor.',
+      'Çarpışmada atışın sonucu hem fiziğe hem şansa bağlı: dart hızlı düşüyorsa ya da <code class="font-mono text-scan">sekmeSansi</code> zarı tutarsa sekiyor, aksi halde tahtaya saplanıp vurulan bölgenin puanını ekliyor. Tüm değerler inspector\'dan ayarlanabiliyor, yani oyun hissi kod değiştirmeden dengeleniyor.'],
+    next:'Bir sonraki iterasyonda planım: string tabanlı <code class="font-mono">Invoke</code> çağrılarını coroutine\'e, <code class="font-mono">FindFirstObjectByType</code> çağrılarını event\'e çevirmek.',
+    code:'code-src-dart', codeTitle:'DartFirlatma.cs' }
+];
+
+// --- Tasarım: fotoğraf manipülasyonları (r = en/boy oranı) ---
 const designs = [
-  { t:'Perde yüzeyine manzara', r:'1280 / 960', o:'assets/design/pair1-original.jpg', e:'assets/design/pair1-edit.jpg',
+  { title:'Perde yüzeyine manzara', r:'1280 / 960', o:'assets/design/pair1-original.jpg', e:'assets/design/pair1-edit.jpg',
     c:'Koyu renkli perde yüzeylerine gökyüzü ve çim tepe ile yıldızlı bir gece manzarası yerleştirildi; zemin ve gökyüzü daha açık tonlara çekildi.' },
-  { t:'Işıklı koridor', r:'1200 / 1600', o:'assets/design/pair2-original.jpg', e:'assets/design/pair2-edit.jpg',
+  { title:'Işıklı koridor', r:'1200 / 1600', o:'assets/design/pair2-original.jpg', e:'assets/design/pair2-edit.jpg',
     c:'Yeşil ışık şeritli koridor siyah beyaza çevrildi. Uçtaki ekranın yerine pencere önünde oturan iki silüet geldi; zemindeki yazı “YOU HAVE BEEN HERE BEFORE” oldu.' },
-  { t:'Karlı kule, gece versiyonu', r:'497 / 617', o:'assets/design/pair3-original.jpg', e:'assets/design/pair3-edit.jpg',
+  { title:'Karlı kule, gece versiyonu', r:'497 / 617', o:'assets/design/pair3-original.jpg', e:'assets/design/pair3-edit.jpg',
     c:'Gündüz mavi gökyüzü yerine gece, kutup ışıkları ve yağan kar eklendi; renk mavi-mor tona kaydırıldı.' },
-  { t:'Kadran pusulaya dönüşüyor', r:'338 / 591', o:'assets/design/pair4-original.jpg', e:'assets/design/pair4-edit.jpg',
+  { title:'Kadran pusulaya dönüşüyor', r:'338 / 591', o:'assets/design/pair4-original.jpg', e:'assets/design/pair4-edit.jpg',
     c:'Romen rakamlı kadran, yön harfleri (K, D, G, B) ve derece işaretleri olan siyah bir pusula kadranıyla değiştirildi.' },
-  { t:'Kilise cephesi', r:'1200 / 1600', o:'assets/design/pair5-original.jpg', e:'assets/design/pair5-edit.jpg',
+  { title:'Kilise cephesi', r:'1200 / 1600', o:'assets/design/pair5-original.jpg', e:'assets/design/pair5-edit.jpg',
     c:'Mavi gökyüzü koyu kırmızı bulutlarla değişti. Taş cephe karartıldı, vitray neredeyse siyaha gömüldü, saat rakamları kırmızıya boyandı.' },
-  { t:'Sisli oyun parkı', r:'678 / 452', o:'assets/design/pair6-original.jpg', e:'assets/design/pair6-edit.jpg',
+  { title:'Sisli oyun parkı', r:'678 / 452', o:'assets/design/pair6-original.jpg', e:'assets/design/pair6-edit.jpg',
     c:'Sisli gece parkı kırmızı bir tona boyandı; zemine yoğun, alçak bir duman katmanı eklendi.' },
-  { t:'Kamp ateşi', r:'384 / 672', o:'assets/design/pair7-original.jpg', e:'assets/design/pair7-edit.jpg',
+  { title:'Kamp ateşi', r:'384 / 672', o:'assets/design/pair7-original.jpg', e:'assets/design/pair7-edit.jpg',
     c:'Siyah beyaz kamp ateşi kırmızıya boyandı; ateşe kıvılcımlar, sol üste kırmızı bir ay eklendi.' }
 ];
-const dg = document.getElementById('design-grid');
-dg.innerHTML = designs.map((d, i) => `
-  <figure class="break-inside-avoid mb-6">
-    <div class="cmp border border-obs-700" style="aspect-ratio:${d.r};--p:50%">
-      <img src="${d.e}" alt="İşlenmiş: ${d.t}" loading="lazy" draggable="false">
-      <img class="ov" src="${d.o}" alt="Orijinal: ${d.t}" loading="lazy" draggable="false">
-      <span class="tag" style="left:8px">Orijinal</span><span class="tag" style="right:8px;color:#4fd8ff">İşlenmiş</span>
-      <input type="range" min="0" max="100" value="50" aria-label="${d.t}: orijinal ve işlenmiş görseli karşılaştır">
-      <span class="bar"></span><span class="knob"><i data-lucide="chevrons-left-right" class="w-4 h-4 text-scan"></i></span>
-      <button type="button" class="expand" data-i="${i}" aria-label="${d.t} çalışmasını sunumda aç"><i data-lucide="maximize" class="w-4 h-4"></i></button>
-    </div>
-    <figcaption class="mt-3"><h3 class="font-display font-semibold">${d.t}</h3><p class="text-sm text-mute mt-1">${d.c}</p></figcaption>
-  </figure>`).join('');
-// Kaydırıcı değeri CSS değişkenine yazılır; çizgi ve kırpma buna bağlıdır
-dg.addEventListener('input', e => {
-  if (e.target.matches('.cmp input')) e.target.closest('.cmp').style.setProperty('--p', e.target.value + '%');
-});
 
-// Sunum modu
-const dm = document.getElementById('deck-modal');
-let dkI = 0;
-function dkShow(i) {
-  dkI = (i + designs.length) % designs.length;
-  const d = designs[dkI];
-  document.getElementById('dk-title').textContent = d.t;
-  document.getElementById('dk-count').textContent = (dkI + 1) + ' / ' + designs.length;
-  const o = document.getElementById('dk-o'), e = document.getElementById('dk-e');
-  o.src = d.o; o.alt = 'Orijinal: ' + d.t; e.src = d.e; e.alt = 'İşlenmiş: ' + d.t;
-  document.getElementById('dk-cap').textContent = d.c;
-}
-dg.addEventListener('click', e => { const b = e.target.closest('.expand'); if (b) { dkShow(+b.dataset.i); dm.showModal(); } });
-document.getElementById('open-deck').addEventListener('click', () => { dkShow(0); dm.showModal(); });
-document.getElementById('dk-prev').addEventListener('click', () => dkShow(dkI - 1));
-document.getElementById('dk-next').addEventListener('click', () => dkShow(dkI + 1));
-dm.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') dkShow(dkI - 1); if (e.key === 'ArrowRight') dkShow(dkI + 1); });
-
-/* ============ Modelleme: diziye bir satır eklemek yeterli ============ */
-// r = görselin en/boy oranı (yerleşim sıçramasın diye). Video için image yerine video:'assets/models/x.mp4' yazılabilir.
+// --- Modelleme ---
 const models = [
-  { title:'Akustik gitar', tool:'Blender', r:'1600 / 900', image:'assets/models/guitar.jpg',
+  { title:'Akustik gitar', tool:'Blender', image:'assets/models/guitar.jpg',
     desc:'Kesik gövdeli akustik gitar; burgular, teller ve köprü detaylarıyla. Kırmızı gradyan zeminde render alındı.' },
-  { title:'Masa lambası', tool:'Blender', r:'492 / 541', image:'assets/models/lamp.jpg',
+  { title:'Masa lambası', tool:'Blender', image:'assets/models/lamp.jpg',
     desc:'Katmanlı kaide ve piramit şapka. Düz gri viewport görünümü.' },
-  { title:'Yuvarlak yan sehpa', tool:'Blender', r:'405 / 471', image:'assets/models/table.jpg',
+  { title:'Yuvarlak yan sehpa', tool:'Blender', image:'assets/models/table.jpg',
     desc:'Yuvarlak tabla ve dışa doğru açılan ayaklar. Düz gri viewport görünümü.' },
-  { title:'Hoparlör', tool:'Blender', r:'612 / 794', image:'assets/models/speaker.jpg',
+  { title:'Hoparlör', tool:'Blender', image:'assets/models/speaker.jpg',
     desc:'Ön yüzde üst hoparlör, orta yuva, büyük woofer ve köşe vidaları.' }
 ];
-const mg = document.getElementById('model-grid');
-mg.innerHTML = models.length ? models.map((m, i) => `
-  <article class="break-inside-avoid mb-6 border border-obs-700 bg-obs-800">
-    ${m.video
-      ? `<div class="vid-wrap relative aspect-video bg-obs-950" data-title="${m.title}"><video muted loop playsinline preload="none" data-src="${m.video}" aria-label="${m.title}"></video><div class="fallback absolute inset-0 items-center justify-center text-mute text-sm font-mono text-center p-4">${m.video} bekleniyor</div><button class="open-video absolute inset-0" aria-label="${m.title} videosunu büyüt"></button></div>`
-      : `<button type="button" class="open-img block w-full" data-i="${i}" aria-label="${m.title} görselini büyüt"><img src="${m.image}" alt="${m.title}" loading="lazy" class="block w-full h-auto" style="aspect-ratio:${m.r}"></button>`}
-    <div class="p-4"><h3 class="font-display font-semibold">${m.title}</h3>
-      ${m.tool ? `<p class="font-mono text-xs text-scan mt-1">${m.tool}</p>` : ''}
-      ${m.desc ? `<p class="text-sm text-ink/85 mt-2">${m.desc}</p>` : ''}</div>
-  </article>`).join('')
-  : `<div class="border border-dashed border-obs-700 p-10 text-center text-mute" style="column-span:all"><i data-lucide="box" class="mx-auto mb-3"></i><p>Modelleme çalışmaları yakında burada olacak.</p></div>`;
 
-/* Görsel büyütme penceresi: tek görsel (model) ya da kaydırılabilir çoklu görsel (tema sunumu) */
-const imd = document.getElementById('img-modal');
-function openImages(title, items) {
-  document.getElementById('im-title').textContent = title;
-  document.getElementById('im-body').innerHTML = items.map(x =>
-    `<img src="${x.src}" alt="${x.alt}" class="block mx-auto max-w-full h-auto ${items.length > 1 ? 'mb-3 last:mb-0' : ''}"${items.length === 1 ? ' style="max-height:80vh;width:auto"' : ''}>`).join('');
-  imd.showModal();
-}
-mg.addEventListener('click', e => {
-  const b = e.target.closest('.open-img');
-  if (b) { const m = models[+b.dataset.i]; openImages(m.title, [{ src: m.image, alt: m.title }]); }
-});
-
-/* Tema sunumu önizlemesi (üç slayt, ekran görüntüsünden) */
-document.getElementById('open-theme').addEventListener('click', () => openImages('Tema sunumu: Frontier, Red, Dreamcore',
-  ['Frontier', 'Red', 'Dreamcore'].map((n, i) => ({ src: `assets/presentations/tema-${i + 1}.jpg`, alt: n + ' teması slaytı' }))));
-
-/* ============ Yardımcılar ============ */
-lucide.createIcons();
-document.getElementById('year').textContent = new Date().getFullYear();
-
-/* ============ Lazy-load video: görünür olunca src ver, ekrandan çıkınca durdur ============ */
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    const v = e.target;
-    if (e.isIntersecting) {
-      if (!v.src && v.dataset.src) v.src = v.dataset.src;
-      v.play().catch(() => {});
-    } else v.pause();
-  });
-}, { rootMargin: '200px', threshold: .15 });
-document.querySelectorAll('.vid-wrap video').forEach(v => {
-  v.addEventListener('error', () => v.closest('.vid-wrap').classList.add('missing'));
-  io.observe(v);
-});
-
-/* ============ Modal yönetimi (<dialog>: Esc ve odak tuzağı yerleşik) ============ */
-const modals = document.querySelectorAll('dialog');
-modals.forEach(d => {
-  // Boş alana (backdrop) tıklayınca kapat
-  d.addEventListener('mousedown', e => { if (e.target === d) d.close(); });
-  d.querySelectorAll('.close').forEach(b => b.addEventListener('click', () => d.close()));
-});
-
-/* Video lightbox */
-const vm = document.getElementById('video-modal'), vmv = document.getElementById('vm-video');
-document.querySelectorAll('.open-video').forEach(btn => btn.addEventListener('click', () => {
-  const wrap = btn.closest('.vid-wrap'), src = wrap.querySelector('video').dataset.src;
-  document.getElementById('vm-title').textContent = wrap.dataset.title;
-  vmv.src = src; vm.showModal(); vmv.play().catch(() => {});
-}));
-vm.addEventListener('close', () => { vmv.pause(); vmv.removeAttribute('src'); vmv.load(); });
-
-/* GDD modalı: core loop adımları GDD'deki sırayla */
-const loop = [
-  'Başvuran laboratuvara girer. Tıbbi geçmişi, etnik kökeni, aile öyküsü, ilaçları ve beyanları incelenir.',
-  'Kısıtlı test seçimi: kaynak sınırı yüzünden her kişiye yalnızca belli sayıda test uygulanabilir.',
-  'Belirti ve yönerge karşılaştırması: sonuçlar her gün değişen yönergelerle çapraz kontrol edilir.',
-  'Karar (onay / ret): devlet baskısı ile vicdan arasında mühürlenir.'
+// --- Sunumlar (popup: slayt önizlemeleri + PPTX indirme) ---
+const decks = [
+  { title:'Fotoğraf manipülasyonu', sub:'8 slayt · PPTX', thumb:'assets/presentations/foto-1.jpg',
+    desc:'Yedi fotoğrafın orijinal ve işlenmiş hâli yan yana. Her slaytta neyin değiştiği kısa bir notla anlatılıyor.',
+    slides:[1,2,3,4,5,6,7,8].map(n => `assets/presentations/foto-${n}.jpg`), file:'assets/Tasarim-Sunumu.pptx' },
+  { title:'Tema sunumu: Frontier, Red, Dreamcore', sub:'PPTX', thumb:'assets/presentations/tema-1.jpg',
+    desc:'Tasarım kategorisindeki kule, kilise ve koridor çalışmaları üzerine kurulu üç atmosfer teması. Her tema için renk sistemi, tipografi, doku, ikon, tabela ve form dili tanımlandı.',
+    themes:[
+      { n:'Frontier', k:'yalıtılmışlık, donmuş karakol, bilimsel keşif', c:['#00B044','#BCADCE','#7E6CA5','#1E277A','#050507','#D0222D'] },
+      { n:'Red', k:'gotik korku, yaklaşan felaket, kutsal mimari, geçen zaman', c:['#F00202','#B18556','#66371F','#210200','#030200'] },
+      { n:'Dreamcore', k:'liminal mekânlar, déjà vu, halüsinasyon belleği, tekinsiz yalnızlık', c:['#F8F8F8','#B6B6B6','#575757','#121212','#000000'] }],
+    slides:[1,2,3].map(n => `assets/presentations/tema-${n}.jpg`), file:'assets/Tema-Sunumu.pptx' }
 ];
-document.getElementById('loop-list').innerHTML = loop.map((t, i) =>
-  `<li class="flex gap-3 border border-obs-700 bg-obs-800 p-3"><span class="font-mono text-plague">${i + 1}</span><span>${t}</span></li>`).join('');
 
-/* Test–semptom tablosu (GDD'deki sistem tablosu) */
-const tests = [
-  ['Kan testi','Kullanılan ilaçlar, alkol seviyesi','Yüksek nabız, ciltte kızarıklık','Alkol ve antibiyotikler virüs belirtilerini taklit edebilir.'],
-  ['İdrar testi','Madde / uyuşturucu taraması','Yüksek nabız, el titremesi','Bağımlılık geçmişi nörolojik hasardan ayırt edilmeli.'],
-  ['Nabız','Kalp ritmi, anlık nabız','Yüksek nabız','Sınır kapısındaki panik ve korku geçici taşikardiye yol açabilir.'],
-  ['Göz kontrolü','Sklera ve damar incelemesi','Gözde kızarıklık','Uykusuzluk ve toz fırtınası gibi Frontier koşulları kızarıklık yapar.'],
-  ['Cilt kontrolü','Cilt lezyonları, döküntü','Ciltte kızarıklık','Alerjik reaksiyonlar yönergelerde hastalık gibi gösterilebilir.'],
-  ['El kontrolü','Motor refleksler, tremor','Yüksek nabız, el titremesi','PO535-V gizli evrede motor nöronları hedeflediği için kritik.']
-];
-document.getElementById('test-rows').innerHTML = tests.map(r =>
-  `<tr><td class="p-3 font-medium text-scan">${r[0]}</td><td class="p-3 text-ink/85">${r[1]}</td><td class="p-3 text-ink/85">${r[2]}</td><td class="p-3 text-mute">${r[3]}</td></tr>`).join('');
-document.getElementById('open-gdd').addEventListener('click', () => document.getElementById('gdd-modal').showModal());
+const cats = [['projects','Projeler',projects],['design','Tasarım',designs],['models','Modelleme',models],['decks','Sunumlar',decks]];
+const works = Object.fromEntries(cats.map(c => [c[0], c[2]]));
+const subOf = (cat, m) => cat === 'models' ? m.tool : cat === 'design' ? '' : m.sub;
 
-/* Kod modalı + basit C# renklendirici (tek geçişli regex: iç içe değişim sorunu yok) */
+/* ============ Yardımcılar: kod renklendirme, video ============ */
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function highlight(src) {
   const re = /(\/\/.*)|("(?:[^"\\]|\\.)*")|(\[[A-Za-z]+(?:\([^\]]*\))?\])|\b(public|private|class|void|int|float|string|bool|return|foreach|var|in|new|if|else|true|false|null|this|using)\b|\b(FishData|ScriptableObject|Sprite|List|Mathf|Random|Time|Vector2|Vector3|Quaternion|Input|Collision|ForceMode|PuanBolgesi|CreateAssetMenu|Header|Range)\b|\b(\d+f?)\b/g;
@@ -845,36 +424,247 @@ function highlight(src) {
     c ? `<span class="tk-c">${c}</span>` : s ? `<span class="tk-s">${s}</span>` : a ? `<span class="tk-a">${a}</span>` :
     k ? `<span class="tk-k">${k}</span>` : t ? `<span class="tk-t">${t}</span>` : `<span class="tk-n">${n}</span>`);
 }
-let codeRaw = '';
-document.querySelectorAll('.open-code').forEach(btn => btn.addEventListener('click', () => {
-  codeRaw = document.getElementById(btn.dataset.src).textContent.trim();
-  document.getElementById('code-out').innerHTML = highlight(codeRaw);
-  document.getElementById('code-title').textContent = btn.dataset.title;
-  document.getElementById('code-modal').showModal();
-}));
-document.getElementById('copy-code').addEventListener('click', e => {
-  navigator.clipboard.writeText(codeRaw).then(() => { e.target.textContent = 'Kopyalandı'; setTimeout(() => e.target.textContent = 'Kopyala', 1500); });
+
+// Lazy-load: kart ve teaser videoları görününce yüklenir, ekrandan çıkınca durur
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  const v = e.target;
+  if (e.isIntersecting) { if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src; v.play().catch(() => {}); }
+  else v.pause();
+}), { rootMargin: '200px', threshold: .15 });
+const watchVideos = root => root.querySelectorAll('video[data-src]').forEach(v => io.observe(v));
+// Video dosyası yoksa kapsayıcıya .missing ekle (yer tutucu yazı görünür)
+document.addEventListener('error', e => {
+  if (e.target.tagName === 'VIDEO') { const b = e.target.closest('.vid-box'); if (b) b.classList.add('missing'); }
+}, true);
+
+/* ============ Çalışmalar: sekmeler + kartlar ============ */
+let activeCat = 'projects';
+function thumb(cat, m) {
+  if (cat === 'projects')
+    return `<div class="vid-box relative w-full h-full"><video muted loop playsinline preload="none" data-src="${m.video}" class="w-full h-full object-cover"></video><p class="fb absolute inset-0 place-items-center text-mute text-xs font-mono text-center p-3">${m.video} bekleniyor</p></div>`;
+  const src = cat === 'design' ? m.e : cat === 'models' ? m.image : m.thumb;
+  return `<img src="${src}" alt="" loading="lazy" class="w-full h-full object-cover">`;
+}
+function renderWorks() {
+  $('tabs').innerHTML = cats.map(([id, label, list]) =>
+    `<button role="tab" aria-selected="${id === activeCat}" data-cat="${id}" class="pb-3 -mb-px whitespace-nowrap font-display ${id === activeCat ? 'text-ink border-b-2 border-scan' : 'text-mute hover:text-ink'}">${label} <span class="font-mono text-xs text-mute">${list.length}</span></button>`).join('');
+  $('works-grid').innerHTML = works[activeCat].map((m, i) => {
+    const sub = subOf(activeCat, m);
+    return `<button class="card text-left bg-obs-900 border border-obs-700 hover:border-mute" data-i="${i}">
+      <div class="aspect-[4/3] bg-obs-950 overflow-hidden">${thumb(activeCat, m)}</div>
+      <div class="p-4"><h3 class="font-display font-semibold">${m.title}</h3>${sub ? `<p class="text-xs text-mute mt-1">${sub}</p>` : ''}</div>
+    </button>`;
+  }).join('');
+  watchVideos($('works-grid'));
+}
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  activeCat = b.dataset.cat; renderWorks();
 });
+$('works-grid').addEventListener('click', e => {
+  const c = e.target.closest('.card'); if (c) openItem(activeCat, +c.dataset.i);
+});
+
+/* ============ Popup içerikleri ============ */
+const ratio = r => { const [a, b] = r.split('/').map(Number); return a / b; };
+const dl = rows => `<dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">${rows.map(r => `<dt class="text-mute">${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl>`;
+const btn = 'px-5 py-3 border border-obs-700 font-display font-semibold hover:border-mute inline-flex items-center gap-2';
+
+const bodies = {
+  projects: m => `
+    <div class="vid-box relative aspect-video bg-obs-950 border border-obs-700">
+      <video src="${m.video}" controls loop playsinline muted autoplay class="w-full h-full"></video>
+      <p class="fb absolute inset-0 place-items-center text-mute text-sm font-mono text-center p-4">${m.video} bekleniyor</p>
+    </div>
+    <div class="mt-6">${dl(m.rows)}</div>
+    <h4 class="font-display font-semibold mt-6">${m.caseTitle}</h4>
+    ${m.paras.map(p => `<p class="text-sm text-ink/85 mt-2 leading-relaxed max-w-prose">${p}</p>`).join('')}
+    <p class="text-sm text-mute mt-3 leading-relaxed max-w-prose">${m.next}</p>
+    <details class="mt-6 border border-obs-700">
+      <summary class="cursor-pointer p-3 flex items-center justify-between font-display font-semibold">
+        <span>Kaynak kod · <span class="font-mono text-xs text-mute">${m.codeTitle}</span></span>
+        <button type="button" class="copy-code px-3 py-1 border border-obs-700 hover:border-mute text-sm font-sans font-normal" data-src="${m.code}">Kopyala</button>
+      </summary>
+      <pre class="overflow-auto p-4 text-[13px] leading-relaxed font-mono border-t border-obs-700"><code>${highlight($(m.code).textContent.trim())}</code></pre>
+    </details>
+    <a href="https://github.com/Togi1" target="_blank" rel="noopener" class="mt-5 text-sm text-scan hover:underline inline-flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i>Tüm kodlar GitHub'da</a>`,
+
+  design: m => `
+    <div class="cmp border border-obs-700 mx-auto" style="aspect-ratio:${m.r};width:min(100%,calc(64vh * ${ratio(m.r)}));--p:50%">
+      <img src="${m.e}" alt="İşlenmiş: ${m.title}" draggable="false">
+      <img class="ov" src="${m.o}" alt="Orijinal: ${m.title}" draggable="false">
+      <span class="tag" style="left:8px">Orijinal</span><span class="tag" style="right:8px;color:#4fd8ff">İşlenmiş</span>
+      <input type="range" min="0" max="100" value="50" aria-label="${m.title}: orijinal ve işlenmiş görseli karşılaştır">
+      <span class="bar"></span><span class="knob"><i data-lucide="chevrons-left-right" class="w-4 h-4 text-scan"></i></span>
+    </div>
+    <p class="text-sm text-ink/85 mt-5 max-w-prose mx-auto leading-relaxed">${m.c}</p>`,
+
+  models: m => `
+    <img src="${m.image}" alt="${m.title}" class="block mx-auto max-w-full h-auto" style="max-height:64vh;width:auto">
+    <p class="text-sm text-ink/85 mt-5 max-w-prose mx-auto leading-relaxed">${m.desc}</p>`,
+
+  decks: m => `
+    <p class="text-sm text-ink/85 leading-relaxed max-w-prose">${m.desc}</p>
+    ${m.themes ? `<ul class="mt-4 space-y-3 text-sm">${m.themes.map(t => `<li class="flex items-start gap-3"><span class="flex gap-1 pt-1 shrink-0" aria-hidden="true">${t.c.map(c => `<i class="w-3.5 h-3.5 border border-obs-700" style="background:${c}" title="${c}"></i>`).join('')}</span><span><b class="font-display">${t.n}</b><span class="text-mute"> · ${t.k}</span></span></li>`).join('')}</ul>` : ''}
+    <a href="${m.file}" download class="${btn} mt-5"><i data-lucide="download" class="w-4 h-4"></i>PPTX indir</a>
+    <div class="mt-6 space-y-3">${m.slides.map((s, i) => `<img src="${s}" alt="${m.title}, slayt ${i + 1}" loading="lazy" class="block w-full h-auto border border-obs-700">`).join('')}</div>`
+};
+
+/* GDD popup'ı */
+const loopSteps = [
+  'Başvuran laboratuvara girer. Tıbbi geçmişi, etnik kökeni, aile öyküsü, ilaçları ve beyanları incelenir.',
+  'Kısıtlı test seçimi: kaynak sınırı yüzünden her kişiye yalnızca belli sayıda test uygulanabilir.',
+  'Belirti ve yönerge karşılaştırması: sonuçlar her gün değişen yönergelerle çapraz kontrol edilir.',
+  'Karar (onay / ret): devlet baskısı ile vicdan arasında mühürlenir.'
+];
+const testRows = [
+  ['Kan testi','Kullanılan ilaçlar, alkol seviyesi','Yüksek nabız, ciltte kızarıklık','Alkol ve antibiyotikler virüs belirtilerini taklit edebilir.'],
+  ['İdrar testi','Madde / uyuşturucu taraması','Yüksek nabız, el titremesi','Bağımlılık geçmişi nörolojik hasardan ayırt edilmeli.'],
+  ['Nabız','Kalp ritmi, anlık nabız','Yüksek nabız','Sınır kapısındaki panik ve korku geçici taşikardiye yol açabilir.'],
+  ['Göz kontrolü','Sklera ve damar incelemesi','Gözde kızarıklık','Uykusuzluk ve toz fırtınası gibi Frontier koşulları kızarıklık yapar.'],
+  ['Cilt kontrolü','Cilt lezyonları, döküntü','Ciltte kızarıklık','Alerjik reaksiyonlar yönergelerde hastalık gibi gösterilebilir.'],
+  ['El kontrolü','Motor refleksler, tremor','Yüksek nabız, el titremesi','PO535-V gizli evrede motor nöronları hedeflediği için kritik.']
+];
+const gddHTML = () => `
+  <p class="text-sm text-ink/85 leading-relaxed max-w-prose">Hastalık: PO535-V (Paralysis Occulta), halk arasında “gizli felç”. Tema: Frontier.</p>
+  <p class="text-sm text-mute mt-2">Ekip: Yavuz Yunusoğlu (yazılım), Oğuz Tok (anlatı), İliser Zehra Çabuk (sanat). Durum: henüz oynanabilir sürüm yok.</p>
+
+  <h4 class="font-display font-semibold mt-8">Oyuncu deneyimi</h4>
+  <div class="mt-3 grid sm:grid-cols-3 gap-px bg-obs-700 border border-obs-700 text-sm">
+    <div class="bg-obs-800 p-4"><b class="font-display text-plague">Ahlaki baskı ve suçluluk</b><p class="mt-1 text-ink/85">Keyfi kurallar yüzünden masumları ölüme terk etmek ile kuralı çiğneyip hastalığı tesise sokmak arasındaki ikilem.</p></div>
+    <div class="bg-obs-800 p-4"><b class="font-display text-plague">Şüphe ve paranoya</b><p class="mt-1 text-ink/85">Devlet yönergelerine, başvuranların samimiyetine, hatta kendi test sonuçlarına bile tam güvenememek.</p></div>
+    <div class="bg-obs-800 p-4"><b class="font-display text-plague">Çaresizlik ve sorumluluk</b><p class="mt-1 text-ink/85">Kısıtlı bütçe ve bozulan cihazlarla, eksik bilgiyle hayat-memat kararları vermek.</p></div>
+  </div>
+
+  <h4 class="font-display font-semibold mt-8">Core loop</h4>
+  <ol class="mt-3 grid sm:grid-cols-2 gap-2 text-sm">${loopSteps.map((t, i) => `<li class="flex gap-3 border border-obs-700 bg-obs-800 p-3"><span class="font-mono text-plague">${i + 1}</span><span>${t}</span></li>`).join('')}</ol>
+  <p class="text-sm text-ink/85 mt-3 max-w-prose">Günün dış döngüsü: akşam kabul edilenlerle konuşma, ertesi sabah kararların televizyon haberlerindeki sonucu, ardından yeni yönergeler. Oyuncu zamanla itaatkâr memur kimliğini bırakıp devletin yönergelerinin yalan olduğunu fark eder ve taraf seçer.</p>
+
+  <h4 class="font-display font-semibold mt-8">Test ve semptom sistemi</h4>
+  <p class="text-sm text-ink/85 mt-2 max-w-prose">Klinik belirtiler yapılabilen testlerle birebir eşleşmez. İlaç geçmişi, madde kullanımı ve psikolojik stres belirtileri maskeleyebilir ya da yanlış pozitif üretebilir. Kişi başına yapılabilecek test sayısı sınırlıdır.</p>
+  <div class="mt-3 overflow-x-auto border border-obs-700">
+    <table class="w-full text-sm text-left min-w-[640px]">
+      <thead class="bg-obs-800 text-mute"><tr><th class="p-3 font-medium">Test</th><th class="p-3 font-medium">Ortaya çıkan veri</th><th class="p-3 font-medium">Tetiklenen belirti</th><th class="p-3 font-medium">Tasarım ve yanıltma notu</th></tr></thead>
+      <tbody class="divide-y divide-obs-700">${testRows.map(r => `<tr><td class="p-3 font-medium text-scan">${r[0]}</td><td class="p-3 text-ink/85">${r[1]}</td><td class="p-3 text-ink/85">${r[2]}</td><td class="p-3 text-mute">${r[3]}</td></tr>`).join('')}</tbody>
+    </table>
+  </div>
+
+  <h4 class="font-display font-semibold mt-8">Ahlaki çatışma</h4>
+  <div class="mt-3 grid sm:grid-cols-2 gap-px bg-obs-700 border border-obs-700 text-sm">
+    <div class="bg-obs-800 p-4"><b class="font-display text-plague">Devlet yönergesi</b><p class="mt-1 text-ink/85">Çöken otoriter yönetim, bütçe açığını örtmek ve muhalifleri, istenmeyen toplulukları elemek için sahte belirti kuralları dayatıyor.</p></div>
+    <div class="bg-obs-800 p-4"><b class="font-display text-scan">Vicdani karar</b><p class="mt-1 text-ink/85">İpuçları akşam konuşmalarında ve muhalif yayınlarda. Oyuncu yönergelerin sahte olduğunu fark ettikçe kararları da değişir.</p></div>
+  </div>
+
+  <h4 class="font-display font-semibold mt-8">Kazanma, kaybetme ve sonlar</h4>
+  <div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm">
+    <div class="border border-scan/50 p-4"><b class="font-display text-scan">Kazanma</b><p class="mt-1 text-ink/85">Hastaların yarısından fazlasını (en az 7 kişi) içeri almak.</p></div>
+    <div class="border border-plague/50 p-4"><b class="font-display text-plague">Kaybetme</b><p class="mt-1 text-ink/85">Bu sayıya ulaşılmadan 16 kişilik kota dolarsa.</p></div>
+  </div>
+  <div class="mt-3 grid sm:grid-cols-3 gap-3 text-sm">
+    <div class="border border-obs-700 p-4"><b class="font-display">Sadakat</b><p class="mt-1 text-ink/85">Rejime bağlı kalmak.</p></div>
+    <div class="border border-obs-700 p-4"><b class="font-display text-scan">Muhalif devrim</b><p class="mt-1 text-ink/85">Taraf seçip gerçeklerin açığa çıkmasına katkıda bulunmak.</p></div>
+    <div class="border border-obs-700 p-4"><b class="font-display text-plague">İsyan / çöküş</b><p class="mt-1 text-ink/85">Düzenin ve hükümetin dağılması.</p></div>
+  </div>
+
+  <h4 class="font-display font-semibold mt-8">Görsel ve ses</h4>
+  <p class="text-sm text-ink/85 mt-2 max-w-prose">Loş renk paleti, retro-distopik tıbbi cihazlar ve aşınmış belge dokusu. Göz kontrolü gibi arayüz öğeleri, tezgâh başındaymış hissi için fiziksel düğme ve kart olarak tasarlandı. Ses; floresan uğultusu, nabız sesleri, bozulan cihaz uyarıları ve boğuk devlet duyurularından oluşuyor, melodik müzik yok.</p>`;
+
+/* Özgeçmiş popup'ı (teknik seviyeler PDF'te, burada tekrarlanmıyor) */
+const cvHTML = () => `
+  <a href="assets/Tolgahan-Ay-CV.pdf" download class="${btn}"><i data-lucide="download" class="w-4 h-4"></i>CV'yi PDF indir</a>
+  <div class="mt-8 grid md:grid-cols-2 gap-8">
+    <div>
+      <h4 class="font-display font-semibold">Eğitim</h4>
+      <ol class="mt-3 border-l border-obs-700 ml-1 space-y-5">
+        <li class="pl-5 relative"><span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-scan"></span><p class="font-medium">Muğla Sıtkı Koçman Üniversitesi, Dijital Oyun Tasarımı</p><p class="text-sm text-mute">2025 – devam ediyor</p></li>
+        <li class="pl-5 relative"><span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-obs-700"></span><p class="font-medium">Lise</p><p class="text-sm text-mute">Okul birincisi olarak mezun</p></li>
+      </ol>
+      <h4 class="font-display font-semibold mt-8">Sertifikalar</h4>
+      <ul class="mt-3 space-y-1.5 text-sm text-ink/85">
+        <li>C# Foundational (Microsoft)</li>
+        <li>DiscoverEU Participant / Cultural Mobility Experience (European Commission)</li>
+        <li>Robotik Kodlama Uzmanlık</li><li>Temel Robotik Kodlama</li><li>Bilgisayar İşletmenliği</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-display font-semibold">Ar-Ge ve patentler</h4>
+      <div class="mt-3 space-y-px bg-obs-700 border border-obs-700 text-sm">
+        <div class="bg-obs-900 p-4"><p class="font-medium">Çizgi İzleyen Robot</p><p class="text-mute mt-1">Robotik kodlama ve donanım entegrasyonu</p><p class="font-mono text-xs text-scan mt-2">TR2022017364U5</p></div>
+        <div class="bg-obs-900 p-4"><p class="font-medium">USB / Mini SD / SD Kart Girişli Kalemlik</p><p class="text-mute mt-1">Ürün geliştirme ve inovatif tasarım</p><p class="font-mono text-xs text-scan mt-2">TR2022018474A2</p></div>
+      </div>
+      <h4 class="font-display font-semibold mt-8">İlgi alanları</h4>
+      <p class="mt-2 text-sm text-ink/85">Lisanslı badminton (7 yıl), teknoloji projeleri ve Ar-Ge, oyun mekanikleri inceleme ve tersine mühendislik.</p>
+    </div>
+  </div>`;
+
+/* ============ Popup yönetimi ============ */
+const dlg = $('detail');
+let cur = { cat: null, i: 0 };
+function show(title, sub, html, multi) {
+  $('dt-title').textContent = title; $('dt-sub').textContent = sub; $('dt-sub').hidden = !sub;
+  $('dt-body').innerHTML = html; $('dt-body').scrollTop = 0;
+  $('dt-foot').hidden = !multi;
+  icons();
+  if (!dlg.open) dlg.showModal();
+}
+function openItem(cat, i) {
+  const list = works[cat]; cur = { cat, i: (i + list.length) % list.length };
+  const m = list[cur.i];
+  show(m.title, subOf(cat, m), bodies[cat](m), list.length > 1);
+  $('dt-count').textContent = (cur.i + 1) + ' / ' + list.length;
+}
+function openStatic(title, sub, html) { cur = { cat: null, i: 0 }; show(title, sub, html, false); }
+
+dlg.addEventListener('mousedown', e => { if (e.target === dlg) dlg.close(); });      // boş alana tıklayınca kapat
+dlg.querySelector('.close').addEventListener('click', () => dlg.close());
+dlg.addEventListener('close', () => { $('dt-body').innerHTML = ''; });               // videoyu da durdurur
+$('dt-prev').addEventListener('click', () => openItem(cur.cat, cur.i - 1));
+$('dt-next').addEventListener('click', () => openItem(cur.cat, cur.i + 1));
+dlg.addEventListener('keydown', e => {
+  if (!cur.cat) return;
+  if (e.key === 'ArrowLeft') openItem(cur.cat, cur.i - 1);
+  if (e.key === 'ArrowRight') openItem(cur.cat, cur.i + 1);
+});
+// Kaydırıcı değeri CSS değişkenine yazılır; çizgi ve kırpma buna bağlıdır
+$('dt-body').addEventListener('input', e => {
+  if (e.target.matches('.cmp input')) e.target.closest('.cmp').style.setProperty('--p', e.target.value + '%');
+});
+// Kod kopyalama (<summary> içinde olduğu için açılıp kapanmayı engelle)
+$('dt-body').addEventListener('click', e => {
+  const b = e.target.closest('.copy-code'); if (!b) return;
+  e.preventDefault();
+  navigator.clipboard.writeText($(b.dataset.src).textContent.trim()).then(() => { b.textContent = 'Kopyalandı'; setTimeout(() => b.textContent = 'Kopyala', 1500); });
+});
+
+$('open-gdd').addEventListener('click', () => openStatic('Project PM535-T: Tasarım Analizi', 'Game Design Document v0.y.z · Petrium Studio · Yazan: Tolgahan Ay', gddHTML()));
+$('open-cv').addEventListener('click', () => openStatic('Özgeçmiş', 'Dijital Oyun Tasarımı Öğrencisi & Yazılım Geliştirici Adayı · Muğla / Bodrum', cvHTML()));
+
+/* Teaser tam ekran: kontroller yalnızca tam ekranda görünür */
+const sv = $('sp-video');
+$('sp-fs').addEventListener('click', () => (sv.requestFullscreen || sv.webkitRequestFullscreen).call(sv));
+document.addEventListener('fullscreenchange', () => { sv.controls = document.fullscreenElement === sv; });
 
 /* ============ Hero mini demo: dosya döngüsü ============ */
 const files = [
-  { id:'#0417', name:'M. Kaya, 34', blood:'Negatif', urine:'Kahverengi, kanlı', pulse:'Düzensiz', note:'Genelge 12: “Kanda iz yoksa kabul edilir.” Tek test yeterli mi?', sick:true },
-  { id:'#0418', name:'A. Demir, 52', blood:'Pozitif', urine:'Normal', pulse:'Normal', note:'Hasta ilaç kullanıyor; yan etki enfeksiyon oranını yükseltmiş olabilir.', sick:false },
-  { id:'#0419', name:'S. Aydın, 27', blood:'Negatif', urine:'Normal', pulse:'Normal', note:'Genelge 13: “Bu mahalleden gelenler şüpheli.” Test sonuçları temiz.', sick:false }
+  { id:'#0417', name:'M. Kaya, 34', blood:'Negatif', urine:'Kahverengi, kanlı', pulse:'Düzensiz', note:'Genelge 12: “Kanda iz yoksa kabul edilir.” Tek test yeterli mi?' },
+  { id:'#0418', name:'A. Demir, 52', blood:'Pozitif', urine:'Normal', pulse:'Normal', note:'Hasta ilaç kullanıyor; yan etki enfeksiyon oranını yükseltmiş olabilir.' },
+  { id:'#0419', name:'S. Aydın, 27', blood:'Negatif', urine:'Normal', pulse:'Normal', note:'Genelge 13: “Bu mahalleden gelenler şüpheli.” Test sonuçları temiz.' }
 ];
-let fi = 0, quota = 3;
-const $ = id => document.getElementById(id);
+let fi = 0;
 function showFile() {
-  const f = files[fi % files.length]; quota = 3;
+  const f = files[fi % files.length];
   $('d-id').textContent = 'DOSYA ' + f.id; $('d-name').textContent = f.name; $('d-blood').textContent = f.blood;
   $('d-urine').textContent = f.urine; $('d-pulse').textContent = f.pulse; $('d-quota').textContent = '2 / 3'; $('d-note').textContent = f.note;
 }
 document.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
-  const f = files[fi % files.length], approve = b.dataset.act === 'ok';
-  $('d-result').textContent = (approve ? 'Onaylandı.' : 'Reddedildi.') + ' Sonuç yarın sabah haberlerde.';
+  $('d-result').textContent = (b.dataset.act === 'ok' ? 'Onaylandı.' : 'Reddedildi.') + ' Sonuç yarın sabah haberlerde.';
   fi++; setTimeout(showFile, 900);
 }));
+
+/* ============ Başlat ============ */
+renderWorks();
+watchVideos($('spotlight'));
+icons();
 </script>
 </body>
 </html>
-.
